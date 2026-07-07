@@ -1,6 +1,7 @@
 'use client';
 import { AlertBanner, Column, type ColumnProps, Loading } from '@umami/react-zen';
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
+import { DataFallback } from '@/components/common/DataSuspense';
 import { useMessages } from '@/components/hooks';
 
 const DEFAULT_WIDTH = '1320px';
@@ -37,7 +38,7 @@ export function PageBody({
       paddingX={{ base: '3', md: '6' }}
       style={{ margin: '0 auto' }}
     >
-      {children}
+      <Suspense fallback={<DataFallback minHeight="400px" />}>{children}</Suspense>
     </Column>
   );
 }

@@ -3,12 +3,12 @@ import { uuid } from '@/lib/crypto';
 import { parseRequest } from '@/lib/request';
 import { json, unauthorized } from '@/lib/response';
 import { pagingParams, reportSchema, reportTypeParam } from '@/lib/schema';
+import type { ShareSection } from '@/permissions';
 import {
   canUpdateWebsite,
   canViewAuthenticatedWebsite,
   canViewWebsiteSection,
 } from '@/permissions';
-import type { ShareSection } from '@/permissions';
 import { createReport, getReports } from '@/queries/prisma';
 
 function getReportSection(type?: z.infer<typeof reportTypeParam>): ShareSection | null {

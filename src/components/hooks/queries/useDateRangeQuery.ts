@@ -1,17 +1,18 @@
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
+import { useLaneQuery } from '../useLaneQuery';
 
 type DateRange = {
   startDate?: string;
   endDate?: string;
 };
 
-export function useDateRangeQuery(websiteId: string, options?: ReactQueryOptions) {
-  const { get, useQuery } = useApi();
+export function useDateRangeQuery(websiteId: string, options?: LaneDataOptions) {
+  const { get } = useApi();
 
-  const { data } = useQuery<DateRange>({
-    queryKey: ['date-range', websiteId],
-    queryFn: () => get(`/websites/${websiteId}/daterange`),
+  const { data } = useLaneQuery<DateRange>({
+    laneKey: ['date-range', websiteId],
+    loader: () => get(`/websites/${websiteId}/daterange`),
     enabled: !!websiteId,
     ...options,
   });

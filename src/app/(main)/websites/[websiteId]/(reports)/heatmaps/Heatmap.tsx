@@ -53,20 +53,12 @@ interface HeatmapProps {
 }
 
 export function Heatmap({ websiteId, urlPath, onUrlPathChange, mode, search }: HeatmapProps) {
-  const {
-    data: pagesData,
-    error,
-    isLoading,
-  } = useResultQuery<HeatmapResult>('heatmap', {
+  const { data: pagesData, error } = useResultQuery<HeatmapResult>('heatmap', {
     websiteId,
     mode,
   });
 
-  const {
-    data: detailData,
-    isLoading: isDetailLoading,
-    isFetching: isDetailFetching,
-  } = useResultQuery<HeatmapResult>(
+  const { data: detailData, isFetching: isDetailFetching } = useResultQuery<HeatmapResult>(
     'heatmap',
     {
       websiteId,
@@ -91,13 +83,9 @@ export function Heatmap({ websiteId, urlPath, onUrlPathChange, mode, search }: H
   const points = detailData?.points ?? [];
   const scroll = detailData?.scroll;
   const snapshot = detailData?.snapshot ?? null;
-  const detailLoading = Boolean(urlPath) && (isDetailLoading || isDetailFetching);
+  const detailLoading = Boolean(urlPath) && isDetailFetching;
 
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
-
     if (filteredPages.length === 0) {
       if (urlPath) {
         onUrlPathChange('');
@@ -110,18 +98,18 @@ export function Heatmap({ websiteId, urlPath, onUrlPathChange, mode, search }: H
     }
 
     onUrlPathChange(filteredPages[0].urlPath);
-  }, [filteredPages, isLoading, onUrlPathChange, urlPath]);
+  }, [filteredPages, onUrlPathChange, urlPath]);
 
-  if (!isLoading && pages.length === 0) {
+  if (pages.length === 0) {
     return (
-      <LoadingPanel data={pagesData} isLoading={isLoading} error={error} minHeight="900px">
+      <LoadingPanel data={pagesData} error={error} minHeight="900px">
         <EmptyState message="No data available." />
       </LoadingPanel>
     );
   }
 
   return (
-    <LoadingPanel data={pagesData} isLoading={isLoading} error={error} minHeight="900px">
+    <LoadingPanel data={pagesData} error={error} minHeight="900px">
       <Grid columns="320px 12px 1fr" minHeight="900px" className={styles.layoutGrid}>
         <PageList
           pages={filteredPages}
@@ -884,13 +872,7 @@ function SnapshotPreview({
   return <IframeSnapshot snapshot={snapshot} onReady={onReady} />;
 }
 
-function IframeSnapshot({
-  snapshot,
-  onReady,
-}: {
-  snapshot: HeatmapSnapshot;
-  onReady: () => void;
-}) {
+function IframeSnapshot({ snapshot, onReady }: { snapshot: HeatmapSnapshot; onReady: () => void }) {
   const [available, setAvailable] = useState(true);
   const iframeUrl = snapshot.url;
 

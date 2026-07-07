@@ -1,4 +1,4 @@
-import { ComboBox, type ComboBoxProps, ListItem, Loading, useDebounce } from '@umami/react-zen';
+import { ComboBox, type ComboBoxProps, ListItem, useDebounce } from '@umami/react-zen';
 import { endOfDay, subMonths } from 'date-fns';
 import { type SetStateAction, useMemo, useState } from 'react';
 import { Empty } from '@/components/common/Empty';
@@ -26,7 +26,7 @@ export function LookupField({
   const startDate = subMonths(endOfDay(new Date()), 6);
   const endDate = endOfDay(new Date());
 
-  const { data, isLoading } = useWebsiteValuesQuery({
+  const { data } = useWebsiteValuesQuery({
     websiteId,
     type,
     search: searchValue,
@@ -56,13 +56,7 @@ export function LookupField({
       formValue="text"
       allowsEmptyCollection
       allowsCustomValue
-      renderEmptyState={() =>
-        isLoading ? (
-          <Loading placement="center" icon="dots" />
-        ) : (
-          <Empty message={t(messages.noResultsFound)} />
-        )
-      }
+      renderEmptyState={() => <Empty message={t(messages.noResultsFound)} />}
     >
       {items.map(item => (
         <ListItem key={item} id={item}>

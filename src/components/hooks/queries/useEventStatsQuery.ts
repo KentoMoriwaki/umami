@@ -1,7 +1,8 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
 import { useDateParameters } from '@/components/hooks/useDateParameters';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export interface EventStatsData {
   events: number;
@@ -22,15 +23,15 @@ type EventStatsApiResponse = {
 
 export function useEventStatsQuery(
   { websiteId }: { websiteId: string },
-  options?: UseQueryOptions<EventStatsApiResponse, Error, EventStatsData>,
+  options?: LaneDataOptions<EventStatsApiResponse, EventStatsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
 
-  return useQuery<EventStatsApiResponse, Error, EventStatsData>({
-    queryKey: ['websites:events:stats', { websiteId, startAt, endAt, ...filters }],
-    queryFn: () =>
+  return useLaneQuery<EventStatsApiResponse, EventStatsData>({
+    laneKey: ['websites:events:stats', { websiteId, startAt, endAt, ...filters }],
+    loader: () =>
       get(`/websites/${websiteId}/events/stats`, {
         startAt,
         endAt,

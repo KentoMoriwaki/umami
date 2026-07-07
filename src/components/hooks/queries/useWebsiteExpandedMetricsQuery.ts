@@ -1,8 +1,8 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export type WebsiteExpandedMetricsData = {
   name: string;
@@ -16,14 +16,14 @@ export type WebsiteExpandedMetricsData = {
 export function useWebsiteExpandedMetricsQuery(
   websiteId: string,
   params: { type: string; limit?: number; search?: string },
-  options?: ReactQueryOptions<WebsiteExpandedMetricsData>,
+  options?: LaneDataOptions<WebsiteExpandedMetricsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters();
 
-  return useQuery<WebsiteExpandedMetricsData>({
-    queryKey: [
+  return useLaneQuery<WebsiteExpandedMetricsData>({
+    laneKey: [
       'websites:metrics:expanded',
       {
         websiteId,
@@ -33,7 +33,7 @@ export function useWebsiteExpandedMetricsQuery(
         ...params,
       },
     ],
-    queryFn: async () =>
+    loader: async () =>
       get(`/websites/${websiteId}/metrics/expanded`, {
         startAt,
         endAt,
@@ -41,7 +41,6 @@ export function useWebsiteExpandedMetricsQuery(
         ...params,
       }),
     enabled: !!websiteId,
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

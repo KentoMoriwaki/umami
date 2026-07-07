@@ -1,7 +1,8 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
 import { useDateParameters } from '@/components/hooks/useDateParameters';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export interface WebsiteStatsData {
   pageviews: number;
@@ -20,15 +21,15 @@ export interface WebsiteStatsData {
 
 export function useWebsiteStatsQuery(
   { websiteId, compare }: { websiteId: string; compare?: string },
-  options?: UseQueryOptions<WebsiteStatsData, Error, WebsiteStatsData>,
+  options?: LaneDataOptions<WebsiteStatsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters();
 
-  return useQuery<WebsiteStatsData>({
-    queryKey: ['websites:stats', { websiteId, compare, startAt, endAt, ...filters }],
-    queryFn: () => get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }),
+  return useLaneQuery<WebsiteStatsData>({
+    laneKey: ['websites:stats', { websiteId, compare, startAt, endAt, ...filters }],
+    loader: () => get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }),
     enabled: !!websiteId,
     ...options,
   });

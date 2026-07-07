@@ -3,6 +3,7 @@ import { Column } from '@umami/react-zen';
 import { PixelShareForm } from '@/app/(main)/pixels/[pixelId]/PixelShareForm';
 import { PixelEditForm } from '@/app/(main)/pixels/PixelEditForm';
 import { PixelProvider } from '@/app/(main)/pixels/PixelProvider';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -12,19 +13,21 @@ import { ArrowLeft, Grid2x2 } from '@/components/icons';
 
 export function PixelEditPage({ pixelId }: { pixelId: string }) {
   return (
-    <PixelProvider pixelId={pixelId}>
-      <Column margin="2" width="100%" maxWidth="800px" style={{ marginInline: 'auto' }}>
-        <PixelEditHeader />
-        <Column gap="6">
-          <Panel>
-            <PixelEditForm pixelId={pixelId} />
-          </Panel>
-          <Panel>
-            <PixelShareForm pixelId={pixelId} />
-          </Panel>
+    <DataSuspense>
+      <PixelProvider pixelId={pixelId}>
+        <Column margin="2" width="100%" maxWidth="800px" style={{ marginInline: 'auto' }}>
+          <PixelEditHeader />
+          <Column gap="6">
+            <Panel>
+              <PixelEditForm pixelId={pixelId} />
+            </Panel>
+            <Panel>
+              <PixelShareForm pixelId={pixelId} />
+            </Panel>
+          </Column>
         </Column>
-      </Column>
-    </PixelProvider>
+      </PixelProvider>
+    </DataSuspense>
   );
 }
 

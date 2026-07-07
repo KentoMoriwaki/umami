@@ -15,7 +15,7 @@ export interface PerformanceStatsResult {
 export async function getPerformanceStats(...args: [websiteId: string, filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -52,7 +52,7 @@ async function relationalQuery(
   return result?.[0] || { lcp: 0, inp: 0, cls: 0, fcp: 0, ttfb: 0, count: 0 };
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   filters: QueryFilters,
 ): Promise<PerformanceStatsResult> {

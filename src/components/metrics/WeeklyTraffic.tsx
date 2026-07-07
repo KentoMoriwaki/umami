@@ -5,7 +5,7 @@ import { useLocale, useMessages, useWeeklyTrafficQuery } from '@/components/hook
 import { getDayOfWeekAsDate } from '@/lib/date';
 
 export function WeeklyTraffic({ websiteId }: { websiteId: string }) {
-  const { data, isLoading, error } = useWeeklyTrafficQuery(websiteId);
+  const { data, error } = useWeeklyTrafficQuery(websiteId);
   const { dateLocale } = useLocale();
   const { labels, t } = useMessages();
   const { weekStartsOn } = dateLocale.options;
@@ -35,7 +35,7 @@ export function WeeklyTraffic({ websiteId }: { websiteId: string }) {
     : [];
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} error={error}>
+    <LoadingPanel data={data} error={error}>
       <Grid columns="repeat(8, 1fr)" gap>
         {data && (
           <>

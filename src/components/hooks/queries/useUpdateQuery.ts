@@ -1,15 +1,54 @@
 import { useToast } from '@umami/react-zen';
+import { useCallback, useState } from 'react';
 import type { ApiError } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useModified } from '../useModified';
 
+type MutationCallbacks<TData, TVariables> = {
+  onSuccess?: (data: TData, variables: TVariables) => void | Promise<void>;
+  onError?: (error: ApiError, variables: TVariables) => void | Promise<void>;
+};
+
 export function useUpdateQuery(path: string, params?: Record<string, any>) {
-  const { post, useMutation } = useApi();
-  const query = useMutation<any, ApiError, Record<string, any>>({
-    mutationFn: (data: Record<string, any>) => post(path, { ...data, ...params }),
-  });
+  const { post } = useApi();
   const { touch } = useModified();
   const { toast } = useToast();
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<ApiError | null>(null);
 
-  return { ...query, touch, toast };
+  const mutateAsync = useCallback(
+    async (
+      data: Record<string, any> = {},
+      callbacks: MutationCallbacks<any, Record<string, any>> = {},
+    ) => {
+      setIsPending(true);
+      setError(null);
+
+      try {
+        const result = await post(path, { ...data, ...params });
+        await callbacks.onSuccess?.(result, data);
+        return result;
+      } catch (e) {
+        const apiError = e as ApiError;
+        setError(apiError);
+        await callbacks.onError?.(apiError, data);
+        throw apiError;
+      } finally {
+        setIsPending(false);
+      }
+    },
+    [params, path, post],
+  );
+
+  const mutate = useCallback(
+    (
+      data: Record<string, any> = {},
+      callbacks: MutationCallbacks<any, Record<string, any>> = {},
+    ) => {
+      void mutateAsync(data, callbacks).catch(() => undefined);
+    },
+    [mutateAsync],
+  );
+
+  return { mutate, mutateAsync, isPending, error, touch, toast };
 }

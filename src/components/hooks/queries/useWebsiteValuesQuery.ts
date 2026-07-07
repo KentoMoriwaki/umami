@@ -1,6 +1,7 @@
 import { useCountryNames } from '@/components/hooks/useCountryNames';
 import { useRegionNames } from '@/components/hooks/useRegionNames';
 import { useApi } from '../useApi';
+import { useLaneQuery } from '../useLaneQuery';
 import { useLocale } from '../useLocale';
 
 export function useWebsiteValuesQuery({
@@ -16,7 +17,7 @@ export function useWebsiteValuesQuery({
   endDate: Date;
   search?: string;
 }) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { locale } = useLocale();
   const { countryNames } = useCountryNames(locale);
   const { regionNames } = useRegionNames(locale);
@@ -48,9 +49,9 @@ export function useWebsiteValuesQuery({
     }
   };
 
-  return useQuery({
-    queryKey: ['websites:values', { websiteId, type, startDate, endDate, search }],
-    queryFn: () =>
+  return useLaneQuery({
+    laneKey: ['websites:values', { websiteId, type, startDate, endDate, search }],
+    loader: () =>
       get(`/websites/${websiteId}/values`, {
         type,
         startAt: +startDate,

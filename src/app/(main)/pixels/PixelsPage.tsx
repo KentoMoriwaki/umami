@@ -1,5 +1,6 @@
 'use client';
 import { Column } from '@umami/react-zen';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
@@ -9,6 +10,14 @@ import { PixelAddButton } from './PixelAddButton';
 import { PixelsDataTable } from './PixelsDataTable';
 
 export function PixelsPage() {
+  return (
+    <DataSuspense>
+      <PixelsPageContent />
+    </DataSuspense>
+  );
+}
+
+function PixelsPageContent() {
   const { user } = useLoginQuery();
   const { t, labels } = useMessages();
   const { teamId } = useNavigation();

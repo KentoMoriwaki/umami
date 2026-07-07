@@ -5,7 +5,6 @@ import {
   FormField,
   FormSubmitButton,
   ListItem,
-  Loading,
   Select,
   Text,
 } from '@umami/react-zen';
@@ -33,7 +32,7 @@ export function WebsiteTransferForm({
   const [teamId, setTeamId] = useState<string>(null);
   const { t, labels, messages, getErrorMessage } = useMessages();
   const { mutateAsync, error, isPending } = useUpdateQuery(`/websites/${websiteId}/transfer`);
-  const { data: teams, isLoading } = useUserTeamsQuery(user.id);
+  const { data: teams } = useUserTeamsQuery(user.id);
   const isTeamWebsite = !!website?.teamId;
 
   const items =
@@ -62,10 +61,6 @@ export function WebsiteTransferForm({
   const handleChange = (key: Key) => {
     setTeamId(key as string);
   };
-
-  if (isLoading) {
-    return <Loading icon="dots" placement="center" />;
-  }
 
   return (
     <Form onSubmit={handleSubmit} error={getErrorMessage(error)} values={{ teamId }}>

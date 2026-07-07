@@ -21,7 +21,7 @@ export function Funnel({ id, name, type, parameters, websiteId }: FunnelProps) {
   const { t, labels } = useMessages();
   const { pathname } = useNavigation();
   const isSharePage = pathname.includes('/share/');
-  const { data, error, isLoading } = useResultQuery<Array<FunnelResult>>(type, {
+  const { data, error } = useResultQuery<Array<FunnelResult>>(type, {
     websiteId,
     ...parameters,
   });
@@ -29,7 +29,7 @@ export function Funnel({ id, name, type, parameters, websiteId }: FunnelProps) {
   const operatorLabels = useOperatorLabels();
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} error={error}>
+    <LoadingPanel data={data} error={error}>
       <Grid gap>
         <Grid columns="1fr auto" gap>
           <Column gap>

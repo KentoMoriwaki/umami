@@ -1,7 +1,8 @@
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export type PropertyDataSource = 'event' | 'session';
 
@@ -9,18 +10,18 @@ export function usePropertyFieldsQuery(
   source: PropertyDataSource,
   websiteId: string,
   eventName?: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const params = useFilterParameters({ includePagination: false });
 
-  return useQuery<any>({
-    queryKey: [
+  return useLaneQuery<any>({
+    laneKey: [
       `websites:${source}-data:fields`,
       { websiteId, eventName, startAt, endAt, unit, timezone, ...params },
     ],
-    queryFn: () =>
+    loader: () =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data/fields`

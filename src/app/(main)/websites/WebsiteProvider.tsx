@@ -1,5 +1,4 @@
 'use client';
-import { Loading } from '@umami/react-zen';
 import { createContext, type ReactNode } from 'react';
 import { useWebsiteQuery } from '@/components/hooks/queries/useWebsiteQuery';
 import type { Website } from '@/generated/prisma/client';
@@ -13,11 +12,7 @@ export function WebsiteProvider({
   websiteId: string;
   children: ReactNode;
 }) {
-  const { data: website, isFetching, isLoading } = useWebsiteQuery(websiteId);
-
-  if (isFetching && isLoading) {
-    return <Loading placement="absolute" />;
-  }
+  const { data: website } = useWebsiteQuery(websiteId);
 
   if (!website) {
     return null;

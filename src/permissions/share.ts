@@ -1,4 +1,3 @@
-import { ENTITY_TYPE } from '@/lib/constants';
 import type { Auth } from '@/lib/types';
 import { canViewWebsite } from './website';
 
@@ -95,7 +94,9 @@ export async function canViewSharedWebsiteFilters(
 
   const { shareToken } = auth || {};
 
-  return shareTokenIncludesWebsite(auth, websiteId) && shareToken?.parameters?.allowFilter !== false;
+  return (
+    shareTokenIncludesWebsite(auth, websiteId) && shareToken?.parameters?.allowFilter !== false
+  );
 }
 
 export async function canViewAuthenticatedWebsite(

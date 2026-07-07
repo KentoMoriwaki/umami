@@ -11,8 +11,8 @@ export function UserSelect({
   teamId?: string;
 } & SelectProps) {
   const { t, messages } = useMessages();
-  const { data: users, isLoading: usersLoading } = useUsersQuery();
-  const { data: teamMembers, isLoading: teamMembersLoading } = useTeamMembersQuery(teamId);
+  const { data: users } = useUsersQuery();
+  const { data: teamMembers } = useTeamMembersQuery(teamId);
   const [username, setUsername] = useState<string>();
   const [search, setSearch] = useState('');
 
@@ -44,7 +44,6 @@ export function UserSelect({
     <Select
       {...props}
       value={username}
-      isLoading={usersLoading || (teamId && teamMembersLoading)}
       allowSearch={true}
       searchValue={search}
       onSearch={handleSearch}

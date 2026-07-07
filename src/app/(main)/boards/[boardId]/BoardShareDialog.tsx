@@ -8,12 +8,12 @@ import { BoardShareCreateForm } from './BoardShareCreateForm';
 import { BoardSharesTable } from './BoardSharesTable';
 
 export function BoardShareDialog({ boardId }: { boardId: string }) {
-  const { data, error, isLoading } = useBoardSharesQuery({ boardId });
+  const { data, error } = useBoardSharesQuery({ boardId });
   const shares = data?.data || [];
   const hasShares = shares.length > 0;
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} error={error}>
+    <LoadingPanel data={data} error={error}>
       <BoardShareDialogContent boardId={boardId} hasShares={hasShares} shares={shares} />
     </LoadingPanel>
   );

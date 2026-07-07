@@ -1,6 +1,7 @@
 'use client';
 import { Column } from '@umami/react-zen';
 import { BoardProvider } from '@/app/(main)/boards/BoardProvider';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { BoardControls } from './BoardControls';
 import { BoardViewBody } from './BoardViewBody';
@@ -18,14 +19,16 @@ export function BoardViewPage({
   showEntityBadges?: boolean;
 }) {
   return (
-    <BoardProvider boardId={boardId}>
-      <PageBody>
-        <Column>
-          <BoardViewHeader showActions={showActions} showEntityBadge={showEntityBadges} />
-          {showControls && <BoardControls />}
-          <BoardViewBody showEntityBadges={showEntityBadges} />
-        </Column>
-      </PageBody>
-    </BoardProvider>
+    <DataSuspense>
+      <BoardProvider boardId={boardId}>
+        <PageBody>
+          <Column>
+            <BoardViewHeader showActions={showActions} showEntityBadge={showEntityBadges} />
+            {showControls && <BoardControls />}
+            <BoardViewBody showEntityBadges={showEntityBadges} />
+          </Column>
+        </PageBody>
+      </BoardProvider>
+    </DataSuspense>
   );
 }

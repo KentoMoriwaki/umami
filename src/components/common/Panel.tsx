@@ -9,7 +9,8 @@ import {
   Tooltip,
   TooltipTrigger,
 } from '@umami/react-zen';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, Suspense, useState } from 'react';
+import { DataFallback } from '@/components/common/DataSuspense';
 import { useMessages } from '@/components/hooks';
 import { Maximize, X } from '@/components/icons';
 
@@ -75,7 +76,7 @@ export function Panel({
           )}
         </Row>
       )}
-      {children}
+      <Suspense fallback={<DataFallback />}>{children}</Suspense>
     </Column>
   );
 }

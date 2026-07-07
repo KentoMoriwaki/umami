@@ -33,7 +33,7 @@ export function FilterBar({ websiteId }: { websiteId?: string }) {
     query: { segment, cohort },
   } = useNavigation();
   const { filters, operatorLabels } = useFilters();
-  const { data, isLoading } = useWebsiteSegmentQuery(websiteId, segment || cohort);
+  const { data } = useWebsiteSegmentQuery(websiteId, segment || cohort);
   const canSaveSegment =
     !!websiteId && filters.length > 0 && !segment && !cohort && !pathname.includes('/share');
 
@@ -63,7 +63,7 @@ export function FilterBar({ websiteId }: { websiteId?: string }) {
       wrap="wrap"
     >
       <Row alignItems="center" gap="2" wrap="wrap" width={{ base: '100%', md: 'auto' }}>
-        {segment && !isLoading && (
+        {segment && (
           <FilterItem
             name="segment"
             label={t(labels.segment)}
@@ -72,7 +72,7 @@ export function FilterBar({ websiteId }: { websiteId?: string }) {
             onRemove={() => handleSegmentRemove('segment')}
           />
         )}
-        {cohort && !isLoading && (
+        {cohort && (
           <FilterItem
             name="cohort"
             label={t(labels.cohort)}

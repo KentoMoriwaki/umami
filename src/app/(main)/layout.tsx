@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+import { ClientSuspense } from '@/components/common/ClientSuspense';
 import { App } from './App';
 
 export default function ({ children }) {
   return (
-    <Suspense>
+    <ClientSuspense>
       <App>{children}</App>
-    </Suspense>
+    </ClientSuspense>
   );
 }
 

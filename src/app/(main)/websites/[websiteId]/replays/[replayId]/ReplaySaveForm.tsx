@@ -7,8 +7,7 @@ import {
   FormSubmitButton,
   TextField,
 } from '@umami/react-zen';
-import { useMessages, useUpdateQuery } from '@/components/hooks';
-import { touch } from '@/components/hooks/useModified';
+import { useMessages, useModified, useUpdateQuery } from '@/components/hooks';
 
 export function ReplaySaveForm({
   websiteId,
@@ -22,6 +21,7 @@ export function ReplaySaveForm({
   onClose?: () => void;
 }) {
   const { t, labels, getErrorMessage } = useMessages();
+  const { touch } = useModified();
   const { mutateAsync, error, isPending } = useUpdateQuery(
     `/websites/${websiteId}/replays/saved/${replayId}`,
   );

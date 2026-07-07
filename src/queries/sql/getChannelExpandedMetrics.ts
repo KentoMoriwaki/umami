@@ -33,7 +33,7 @@ export async function getChannelExpandedMetrics(
 ): Promise<ChannelExpandedMetricsData[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -141,7 +141,7 @@ async function relationalQuery(
   ).then(results => results.map(item => ({ ...item, y: Number(item.y) })));
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   filters: QueryFilters,
 ): Promise<ChannelExpandedMetricsData[]> {

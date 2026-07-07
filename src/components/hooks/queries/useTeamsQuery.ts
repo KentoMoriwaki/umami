@@ -1,15 +1,13 @@
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
 import { usePagedQuery } from '../usePagedQuery';
 
-export function useTeamsQuery(params?: Record<string, any>, options?: ReactQueryOptions) {
+export function useTeamsQuery(params?: Record<string, any>, options?: LaneDataOptions) {
   const { get } = useApi();
-  const { modified } = useModified(`teams`);
 
   return usePagedQuery({
-    queryKey: ['teams:admin', { modified, ...params }],
-    queryFn: pageParams => {
+    laneKey: ['teams:admin', { ...params }],
+    loader: pageParams => {
       return get(`/admin/teams`, {
         ...pageParams,
         ...params,

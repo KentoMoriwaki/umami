@@ -1,5 +1,10 @@
+import { ClientSuspense } from '@/components/common/ClientSuspense';
 import { SharePage } from './SharePage';
 
 export default function () {
-  return <SharePage />;
+  return (
+    <ClientSuspense>
+      <SharePage />
+    </ClientSuspense>
+  );
 }

@@ -3,6 +3,7 @@ import { Column } from '@umami/react-zen';
 import { LinkShareForm } from '@/app/(main)/links/[linkId]/LinkShareForm';
 import { LinkEditForm } from '@/app/(main)/links/LinkEditForm';
 import { LinkProvider } from '@/app/(main)/links/LinkProvider';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -12,19 +13,21 @@ import { ArrowLeft, Link as LinkIcon } from '@/components/icons';
 
 export function LinkEditPage({ linkId }: { linkId: string }) {
   return (
-    <LinkProvider linkId={linkId}>
-      <Column margin="2" width="100%" maxWidth="800px" style={{ marginInline: 'auto' }}>
-        <LinkEditHeader />
-        <Column gap="6">
-          <Panel>
-            <LinkEditForm linkId={linkId} />
-          </Panel>
-          <Panel>
-            <LinkShareForm linkId={linkId} />
-          </Panel>
+    <DataSuspense>
+      <LinkProvider linkId={linkId}>
+        <Column margin="2" width="100%" maxWidth="800px" style={{ marginInline: 'auto' }}>
+          <LinkEditHeader />
+          <Column gap="6">
+            <Panel>
+              <LinkEditForm linkId={linkId} />
+            </Panel>
+            <Panel>
+              <LinkShareForm linkId={linkId} />
+            </Panel>
+          </Column>
         </Column>
-      </Column>
-    </LinkProvider>
+      </LinkProvider>
+    </DataSuspense>
   );
 }
 

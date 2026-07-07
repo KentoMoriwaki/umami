@@ -1,8 +1,9 @@
 import { serializePropertyFilters } from '@/lib/params';
-import type { PropertyFilter, ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions, PropertyFilter } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 import type { PropertyDataSource } from './usePropertyFieldsQuery';
 
 export function usePropertyValuesQuery(
@@ -12,14 +13,14 @@ export function usePropertyValuesQuery(
   dataType?: number,
   propertyFilters: PropertyFilter[] = [],
   eventName?: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const params = useFilterParameters({ includePagination: false });
 
-  return useQuery<any>({
-    queryKey: [
+  return useLaneQuery<any>({
+    laneKey: [
       `websites:${source}-data:values`,
       {
         websiteId,
@@ -34,7 +35,7 @@ export function usePropertyValuesQuery(
         ...params,
       },
     ],
-    queryFn: () =>
+    loader: () =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data/values`

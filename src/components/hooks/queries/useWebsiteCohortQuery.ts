@@ -1,21 +1,18 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useWebsiteCohortQuery(
   websiteId: string,
   cohortId: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`cohorts`);
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['website:cohorts', { websiteId, cohortId, modified }],
-    queryFn: () => get(`/websites/${websiteId}/segments/${cohortId}`),
+  return useLaneQuery({
+    laneKey: ['website:cohorts', { websiteId, cohortId }],
+    loader: () => get(`/websites/${websiteId}/segments/${cohortId}`),
     enabled: !!(websiteId && cohortId),
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

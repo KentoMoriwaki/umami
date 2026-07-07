@@ -1,4 +1,5 @@
 import { ShareProvider } from '@/app/share/ShareProvider';
+import { ClientSuspense } from '@/components/common/ClientSuspense';
 
 export default async function ({
   params,
@@ -9,5 +10,9 @@ export default async function ({
 }) {
   const { slug } = await params;
 
-  return <ShareProvider slug={slug}>{children}</ShareProvider>;
+  return (
+    <ClientSuspense>
+      <ShareProvider slug={slug}>{children}</ShareProvider>
+    </ClientSuspense>
+  );
 }

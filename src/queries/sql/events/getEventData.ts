@@ -9,7 +9,7 @@ const FUNCTION_NAME = 'getEventData';
 export async function getEventData(...args: [websiteId: string, filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -76,7 +76,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   return { data, count, page: +page, pageSize: size };
 }
 
-async function clickhouseQuery(websiteId: string, filters: QueryFilters) {
+async function clickhouseSql(websiteId: string, filters: QueryFilters) {
   const { rawQuery, parseFilters } = clickhouse;
   const { page = 1, pageSize } = filters;
   const size = +pageSize || DEFAULT_PAGE_SIZE;

@@ -7,12 +7,12 @@ import { Avatar } from '@/components/common/Avatar';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
 import {
   useMessages,
+  useModified,
   useReplayQuery,
   useReplaySavedQuery,
   useUpdateQuery,
   useWebsiteSessionQuery,
 } from '@/components/hooks';
-import { touch } from '@/components/hooks/useModified';
 import { ReplayPlayer } from './ReplayPlayer';
 import { ReplaySaveForm } from './ReplaySaveForm';
 
@@ -27,12 +27,13 @@ export function ReplayPlayback({
   showSessionInfo?: boolean;
   onClose?: () => void;
 }) {
-  const { data: replay, isLoading, error } = useReplayQuery(websiteId, replayId);
+  const { data: replay, error } = useReplayQuery(websiteId, replayId);
   const { data: replaySaved } = useReplaySavedQuery(websiteId, replayId);
   const { data: session } = useWebsiteSessionQuery(websiteId, replay?.sessionId);
   const { t, labels } = useMessages();
   const [isSaved, setIsSaved] = useState<boolean | null>(null);
   const { mutate } = useUpdateQuery(`/websites/${websiteId}/replays/saved/${replayId}`);
+  const { touch } = useModified();
 
   const saved = isSaved ?? replaySaved?.isSaved ?? false;
 
@@ -42,13 +43,7 @@ export function ReplayPlayback({
   };
 
   return (
-    <LoadingPanel
-      data={replay}
-      isLoading={isLoading}
-      error={error}
-      loadingIcon="spinner"
-      style={{ minHeight: '400px' }}
-    >
+    <LoadingPanel data={replay} error={error} loadingIcon="spinner" style={{ minHeight: '400px' }}>
       {replay && (
         <Column gap="6">
           {session && (

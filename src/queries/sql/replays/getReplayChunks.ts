@@ -27,7 +27,7 @@ export async function getReplayChunks(
 ): Promise<ReplayChunk[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(websiteId, visitId, options),
-    [CLICKHOUSE]: () => clickhouseQuery(websiteId, visitId, options),
+    [CLICKHOUSE]: () => clickhouseSql(websiteId, visitId, options),
   });
 }
 
@@ -84,7 +84,7 @@ async function relationalQuery(
   }));
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   visitId: string,
   { endAt, endChunkIndex }: GetReplayChunksOptions,

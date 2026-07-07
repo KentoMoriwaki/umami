@@ -1,5 +1,6 @@
 'use client';
 import { Column } from '@umami/react-zen';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
@@ -9,6 +10,14 @@ import { WebsiteAddButton } from './WebsiteAddButton';
 import { WebsitesDataTable } from './WebsitesDataTable';
 
 export function WebsitesPage() {
+  return (
+    <DataSuspense>
+      <WebsitesPageContent />
+    </DataSuspense>
+  );
+}
+
+function WebsitesPageContent() {
   const { user } = useLoginQuery();
   const { teamId } = useNavigation();
   const { t, labels } = useMessages();

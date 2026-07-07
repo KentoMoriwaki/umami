@@ -2,6 +2,7 @@
 import { Column } from '@umami/react-zen';
 import { BoardShareDialog } from '@/app/(main)/boards/[boardId]/BoardShareDialog';
 import { BoardEditForm } from '@/app/(main)/boards/BoardEditForm';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { PageBody } from '@/components/common/PageBody';
@@ -11,6 +12,14 @@ import { useBoardQuery, useMessages, useNavigation } from '@/components/hooks';
 import { ArrowLeft, LayoutDashboard } from '@/components/icons';
 
 export function BoardEditPage({ boardId }: { boardId: string }) {
+  return (
+    <DataSuspense>
+      <BoardEditPageContent boardId={boardId} />
+    </DataSuspense>
+  );
+}
+
+function BoardEditPageContent({ boardId }: { boardId: string }) {
   const { data: board } = useBoardQuery(boardId);
   const { t, labels } = useMessages();
   const { renderUrl } = useNavigation();
@@ -18,18 +27,16 @@ export function BoardEditPage({ boardId }: { boardId: string }) {
   return (
     <PageBody>
       <Column margin="2" width="100%" maxWidth="800px" style={{ marginInline: 'auto' }}>
-        <>
-          <Column marginTop="6">
-            <Link href={renderUrl(`/boards/${boardId}`)}>
-              <IconLabel icon={<ArrowLeft />} label="Board" />
-            </Link>
-          </Column>
-          <PageHeader
-            title={board?.name || t(labels.untitled)}
-            description={board?.description}
-            icon={<LayoutDashboard />}
-          />
-        </>
+        <Column marginTop="6">
+          <Link href={renderUrl(`/boards/${boardId}`)}>
+            <IconLabel icon={<ArrowLeft />} label="Board" />
+          </Link>
+        </Column>
+        <PageHeader
+          title={board?.name || t(labels.untitled)}
+          description={board?.description}
+          icon={<LayoutDashboard />}
+        />
         <Column gap="6">
           <Panel>
             <BoardEditForm boardId={boardId} />

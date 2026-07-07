@@ -21,7 +21,7 @@ export function PixelSelect({
   const { data: pixel } = usePixelQuery(pixelId);
   const [name, setName] = useState<string>(pixel?.name);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = usePixelsQuery({ teamId }, { search, pageSize: 20 });
+  const { data } = usePixelsQuery({ teamId }, { search, pageSize: 20 });
   const listItems: { id: string; name: string }[] = data?.data || [];
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export function PixelSelect({
     <Select
       {...props}
       value={pixelId}
-      isLoading={isLoading}
       allowSearch={true}
       searchValue={search}
       onSearch={setSearch}

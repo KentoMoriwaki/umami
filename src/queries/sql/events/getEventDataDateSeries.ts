@@ -17,7 +17,7 @@ export async function getEventDataDateSeries(
 ): Promise<EventDataDateSeriesPoint[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -64,7 +64,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   eventName: string,
   propertyName: string,

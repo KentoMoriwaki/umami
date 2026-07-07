@@ -1,17 +1,14 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
-export function useUserQuery(userId: string, options?: ReactQueryOptions) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`user:${userId}`);
+export function useUserQuery(userId: string, options?: LaneDataOptions) {
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['users', { userId, modified }],
-    queryFn: () => get(`/users/${userId}`),
+  return useLaneQuery({
+    laneKey: ['users', { userId }],
+    loader: () => get(`/users/${userId}`),
     enabled: !!userId,
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

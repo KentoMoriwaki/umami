@@ -1,5 +1,5 @@
 'use client';
-import { Loading, useToast } from '@umami/react-zen';
+import { useToast } from '@umami/react-zen';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { BoardContext, type LayoutGetter } from '@/app/(main)/boards/BoardProvider';
@@ -47,12 +47,13 @@ export function DashboardProvider({
   editing?: boolean;
   children: ReactNode;
 }) {
-  const { data, isFetching, isLoading } = useDashboardQuery();
-  const { post, useMutation } = useApi();
+  const { data } = useDashboardQuery();
+  const { post } = useApi();
   const { touch } = useModified();
   const { toast } = useToast();
   const { t, labels, messages } = useMessages();
   const [board, setBoard] = useState<Partial<Board>>(data ?? createDefaultBoard());
+  const [isPending, setIsPending] = useState(false);
   const layoutGetterRef = useRef<LayoutGetter | null>(null);
 
   const registerLayoutGetter = useCallback((getter: LayoutGetter) => {
@@ -68,12 +69,6 @@ export function DashboardProvider({
     }
   }, [data]);
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (boardData: Partial<Board>) => {
-      return post('/dashboard', boardData);
-    },
-  });
-
   const updateBoard = useCallback((data: Partial<Board>) => {
     setBoard(current => ({ ...current, ...data }));
   }, []);
@@ -85,23 +80,27 @@ export function DashboardProvider({
       layoutData ? { ...board.parameters, ...layoutData } : board.parameters,
     );
 
-    const result = await mutateAsync({
-      ...board,
-      name: dashboardName,
-      description: '',
-      parameters,
-    });
+    setIsPending(true);
+
+    const result = await (async () => {
+      try {
+        return await post('/dashboard', {
+          ...board,
+          name: dashboardName,
+          description: '',
+          parameters,
+        });
+      } finally {
+        setIsPending(false);
+      }
+    })();
 
     toast(t(messages.saved));
     touch('dashboard');
     touch('boards');
 
     return result;
-  }, [board, labels.dashboard, messages.saved, mutateAsync, t, toast, touch]);
-
-  if (isFetching && isLoading) {
-    return <Loading placement="absolute" />;
-  }
+  }, [board, labels.dashboard, messages.saved, post, t, toast, touch]);
 
   return (
     <BoardContext.Provider

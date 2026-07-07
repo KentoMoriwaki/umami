@@ -6,7 +6,6 @@ import {
   FormSubmitButton,
   Icon,
   Label,
-  Loading,
   Row,
   TextField,
 } from '@umami/react-zen';
@@ -41,7 +40,7 @@ export function PixelEditForm({
   const config = useConfig();
   const pixelsUrl = config?.pixelsUrl;
   const hostUrl = pixelsUrl || PIXELS_URL;
-  const { data, isLoading } = usePixelQuery(pixelId);
+  const { data } = usePixelQuery(pixelId);
   const [slug, setSlug] = useState(generateId());
 
   const handleSubmit = async (data: any) => {
@@ -69,10 +68,6 @@ export function PixelEditForm({
       setSlug(data.slug);
     }
   }, [data]);
-
-  if (pixelId && isLoading) {
-    return <Loading placement="absolute" />;
-  }
 
   return (
     <Form onSubmit={handleSubmit} error={getErrorMessage(error)} defaultValues={{ slug, ...data }}>

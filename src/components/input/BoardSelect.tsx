@@ -21,7 +21,7 @@ export function BoardSelect({
   const { data: board } = useBoardQuery(boardId);
   const [name, setName] = useState<string>(board?.name);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useBoardsQuery({ teamId }, { search, pageSize: 20 });
+  const { data } = useBoardsQuery({ teamId }, { search, pageSize: 20 });
   const listItems: { id: string; name: string }[] = data?.data || [];
 
   useEffect(() => {
@@ -56,7 +56,6 @@ export function BoardSelect({
     <Select
       {...props}
       value={boardId}
-      isLoading={isLoading}
       allowSearch={true}
       searchValue={search}
       onSearch={setSearch}

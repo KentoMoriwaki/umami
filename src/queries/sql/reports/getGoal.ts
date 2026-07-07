@@ -16,7 +16,7 @@ export async function getGoal(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -76,11 +76,7 @@ async function relationalQuery(
   ).then(results => results?.[0]);
 }
 
-async function clickhouseQuery(
-  websiteId: string,
-  parameters: GoalParameters,
-  filters: QueryFilters,
-) {
+async function clickhouseSql(websiteId: string, parameters: GoalParameters, filters: QueryFilters) {
   const { startDate, endDate, type, value } = parameters;
   const { rawQuery, parseFilters } = clickhouse;
   const eventType = type === 'path' ? EVENT_TYPE.pageView : EVENT_TYPE.customEvent;

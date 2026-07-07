@@ -17,7 +17,7 @@ export async function getRevenueChart(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -72,7 +72,7 @@ async function relationalQuery(
   return { chart };
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   parameters: RevenuParameters,
   filters: QueryFilters,

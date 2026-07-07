@@ -9,7 +9,7 @@ const FUNCTION_NAME = 'getRealtimeActivity';
 export async function getRealtimeActivity(...args: [websiteId: string, filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -50,7 +50,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   );
 }
 
-async function clickhouseQuery(websiteId: string, filters: QueryFilters): Promise<{ x: number }> {
+async function clickhouseSql(websiteId: string, filters: QueryFilters): Promise<{ x: number }> {
   const { rawQuery, parseFilters } = clickhouse;
   const { queryParams, filterQuery, cohortQuery, dateQuery } = parseFilters({
     ...filters,

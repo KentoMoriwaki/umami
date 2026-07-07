@@ -1,13 +1,12 @@
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useReplaySavedQuery(websiteId: string, replayId: string) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified('replays');
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['replay:saved', { websiteId, replayId, modified }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['replay:saved', { websiteId, replayId }],
+    loader: () => {
       return get(`/websites/${websiteId}/replays/saved/${replayId}`);
     },
     enabled: Boolean(websiteId && replayId),

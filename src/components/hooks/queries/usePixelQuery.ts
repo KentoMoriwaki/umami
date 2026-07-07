@@ -1,13 +1,12 @@
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function usePixelQuery(pixelId?: string) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`pixel:${pixelId}`);
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['pixel', { pixelId, modified }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['pixel', { pixelId }],
+    loader: () => {
       return get(`/pixels/${pixelId}`);
     },
     enabled: !!pixelId,

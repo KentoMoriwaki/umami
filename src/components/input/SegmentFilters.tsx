@@ -18,14 +18,14 @@ export function SegmentFilters({
   type = 'segment',
   onChange,
 }: SegmentFiltersProps) {
-  const { data, isLoading, isFetching } = useWebsiteSegmentsQuery(websiteId, { type });
+  const { data, isFetching } = useWebsiteSegmentsQuery(websiteId, { type });
 
   const handleChange = (id: string) => {
     onChange?.(id, type);
   };
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} isFetching={isFetching} overflowY="auto">
+    <LoadingPanel data={data} isFetching={isFetching} overflowY="auto">
       {data?.data?.length === 0 && <Empty />}
       <List selectionMode="single" value={[segmentId]} onChange={id => handleChange(id[0])}>
         {data?.data?.map(item => {

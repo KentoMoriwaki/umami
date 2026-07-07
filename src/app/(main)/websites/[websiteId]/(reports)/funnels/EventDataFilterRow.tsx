@@ -6,14 +6,13 @@ import {
   Grid,
   Icon,
   ListItem,
-  Loading,
   Select,
   useDebounce,
 } from '@umami/react-zen';
 import { endOfDay, subMonths } from 'date-fns';
 import { useState } from 'react';
 import { Empty } from '@/components/common/Empty';
-import { useApi, useMessages, useMobile } from '@/components/hooks';
+import { useApi, useLaneQuery, useMessages, useMobile } from '@/components/hooks';
 import { X } from '@/components/icons';
 
 export function getEventDataDateRange() {
@@ -36,17 +35,15 @@ function PropertySelect({
   onChange?: (value: string) => void;
   onPropertyChange?: (value: string) => void;
 }) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { t, messages } = useMessages();
   const [search, setSearch] = useState(value ?? '');
   const searchValue = useDebounce(search, 300);
   const { startAt, endAt } = getEventDataDateRange();
 
-  const { data, isLoading } = useQuery<
-    Array<{ eventName: string; propertyName: string; total: number }>
-  >({
-    queryKey: ['event-data:properties', { websiteId, eventName, searchValue, startAt, endAt }],
-    queryFn: () =>
+  const { data } = useLaneQuery<Array<{ eventName: string; propertyName: string; total: number }>>({
+    laneKey: ['event-data:properties', { websiteId, eventName, searchValue, startAt, endAt }],
+    loader: () =>
       get(`/websites/${websiteId}/event-data/properties`, {
         startAt,
         endAt,
@@ -72,13 +69,7 @@ function PropertySelect({
       formValue="text"
       allowsEmptyCollection
       allowsCustomValue
-      renderEmptyState={() =>
-        isLoading ? (
-          <Loading placement="center" icon="dots" />
-        ) : (
-          <Empty message={t(messages.noResultsFound)} />
-        )
-      }
+      renderEmptyState={() => <Empty message={t(messages.noResultsFound)} />}
     >
       {properties.map(p => (
         <ListItem key={p} id={p}>
@@ -102,13 +93,13 @@ function ValueSelect({
   value?: string;
   onChange?: (value: string) => void;
 }) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { t, messages } = useMessages();
   const { startAt, endAt } = getEventDataDateRange();
 
-  const { data, isLoading } = useQuery<Array<{ value: string; total: number }>>({
-    queryKey: ['event-data:values', { websiteId, eventName, propertyName, startAt, endAt }],
-    queryFn: () =>
+  const { data } = useLaneQuery<Array<{ value: string; total: number }>>({
+    laneKey: ['event-data:values', { websiteId, eventName, propertyName, startAt, endAt }],
+    loader: () =>
       get(`/websites/${websiteId}/event-data/values`, {
         startAt,
         endAt,
@@ -132,13 +123,7 @@ function ValueSelect({
       formValue="text"
       allowsEmptyCollection
       allowsCustomValue
-      renderEmptyState={() =>
-        isLoading ? (
-          <Loading placement="center" icon="dots" />
-        ) : (
-          <Empty message={t(messages.noResultsFound)} />
-        )
-      }
+      renderEmptyState={() => <Empty message={t(messages.noResultsFound)} />}
     >
       {values.map(v => (
         <ListItem key={v} id={v}>

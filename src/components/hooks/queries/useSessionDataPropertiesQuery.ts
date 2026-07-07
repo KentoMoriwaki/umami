@@ -1,8 +1,9 @@
 import { serializePropertyFilters } from '@/lib/params';
-import type { PropertyFilter, ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions, PropertyFilter } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useSessionDataPropertiesQuery(
   websiteId: string,
@@ -10,15 +11,15 @@ export function useSessionDataPropertiesQuery(
     propertyName?: string;
     propertyFilters?: PropertyFilter[];
   },
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
   const { propertyName, propertyFilters = [] } = params || {};
 
-  return useQuery<any>({
-    queryKey: [
+  return useLaneQuery<any>({
+    laneKey: [
       'websites:session-data:properties',
       {
         websiteId,
@@ -31,7 +32,7 @@ export function useSessionDataPropertiesQuery(
         ...filters,
       },
     ],
-    queryFn: () =>
+    loader: () =>
       get(`/websites/${websiteId}/session-data/properties`, {
         startAt,
         endAt,

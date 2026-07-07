@@ -5,7 +5,6 @@ import {
   FormField,
   FormSubmitButton,
   ListItem,
-  Loading,
   Row,
   Select,
   TextField,
@@ -57,7 +56,7 @@ export function BoardEditForm({
   const { t, labels, messages, getErrorMessage } = useMessages();
   const { teamId: navigationTeamId } = useNavigation();
   const resolvedTeamId = teamId ?? navigationTeamId;
-  const { data: board, isLoading } = useBoardQuery(boardId || '');
+  const { data: board } = useBoardQuery(boardId || '');
   const { mutateAsync, error, isPending, touch, toast } = useUpdateQuery(
     boardId ? `/boards/${boardId}` : '/boards',
     {
@@ -81,10 +80,6 @@ export function BoardEditForm({
     await onSave?.(result);
     onClose?.();
   };
-
-  if (boardId && isLoading) {
-    return <Loading placement="absolute" />;
-  }
 
   return (
     <Form onSubmit={handleSubmit} error={getErrorMessage(error)} values={values}>

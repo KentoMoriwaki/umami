@@ -17,7 +17,7 @@ const FUNCTION_NAME = 'getChannelMetrics';
 export async function getChannelMetrics(...args: [websiteId: string, filters?: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -103,7 +103,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   ).then(results => results.map(item => ({ ...item, y: Number(item.y) })));
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   filters: QueryFilters,
 ): Promise<{ x: string; y: number }[]> {

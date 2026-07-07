@@ -7,6 +7,7 @@ import { PixelPanels } from '@/app/(main)/pixels/[pixelId]/PixelPanels';
 import { PixelProvider } from '@/app/(main)/pixels/PixelProvider';
 import { ExpandedViewModal } from '@/app/(main)/websites/[websiteId]/ExpandedViewModal';
 import { WebsiteChart } from '@/app/(main)/websites/[websiteId]/WebsiteChart';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { Panel } from '@/components/common/Panel';
 
@@ -20,21 +21,23 @@ export function PixelPage({
   showHeaderActions?: boolean;
 }) {
   return (
-    <PixelProvider pixelId={pixelId}>
-      <Grid width="100%" height="100%">
-        <Column margin="2">
-          <PageBody gap>
-            <PixelHeader showActions={showHeaderActions} />
-            <PixelControls pixelId={pixelId} />
-            <PixelMetricsBar pixelId={pixelId} showChange={true} />
-            <Panel>
-              <WebsiteChart websiteId={pixelId} />
-            </Panel>
-            <PixelPanels pixelId={pixelId} />
-          </PageBody>
-          <ExpandedViewModal websiteId={pixelId} excludedIds={excludedIds} />
-        </Column>
-      </Grid>
-    </PixelProvider>
+    <DataSuspense>
+      <PixelProvider pixelId={pixelId}>
+        <Grid width="100%" height="100%">
+          <Column margin="2">
+            <PageBody gap>
+              <PixelHeader showActions={showHeaderActions} />
+              <PixelControls pixelId={pixelId} />
+              <PixelMetricsBar pixelId={pixelId} showChange={true} />
+              <Panel>
+                <WebsiteChart websiteId={pixelId} />
+              </Panel>
+              <PixelPanels pixelId={pixelId} />
+            </PageBody>
+            <ExpandedViewModal websiteId={pixelId} excludedIds={excludedIds} />
+          </Column>
+        </Grid>
+      </PixelProvider>
+    </DataSuspense>
   );
 }

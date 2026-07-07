@@ -9,7 +9,7 @@ const FUNCTION_NAME = 'getWeeklyTraffic';
 export async function getWeeklyTraffic(...args: [websiteId: string, filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -43,7 +43,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   ).then(formatResults);
 }
 
-async function clickhouseQuery(websiteId: string, filters: QueryFilters) {
+async function clickhouseSql(websiteId: string, filters: QueryFilters) {
   const { timezone = 'utc' } = filters;
   const { rawQuery, parseFilters } = clickhouse;
   const { filterQuery, cohortQuery, excludeBounceQuery, queryParams } = await parseFilters({

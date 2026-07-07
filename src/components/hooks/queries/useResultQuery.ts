@@ -1,20 +1,21 @@
 import { useDateParameters } from '@/components/hooks/useDateParameters';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useResultQuery<T = any>(
   type: string,
   params?: Record<string, any>,
-  options?: ReactQueryOptions<T>,
+  options?: LaneDataOptions<T>,
 ) {
   const { websiteId, ...parameters } = params;
-  const { post, useQuery } = useApi();
+  const { post } = useApi();
   const { startDate, endDate, timezone, unit } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
 
-  return useQuery<T>({
-    queryKey: [
+  return useLaneQuery<T>({
+    laneKey: [
       'reports',
       {
         type,
@@ -27,7 +28,7 @@ export function useResultQuery<T = any>(
         ...filters,
       },
     ],
-    queryFn: () =>
+    loader: () =>
       post(`/reports/${type}`, {
         websiteId,
         type,

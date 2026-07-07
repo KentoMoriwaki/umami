@@ -1,6 +1,7 @@
 'use client';
 import { Column, Grid } from '@umami/react-zen';
 import { WebsiteControls } from '@/app/(main)/websites/[websiteId]/WebsiteControls';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { Panel } from '@/components/common/Panel';
 import { SectionHeader } from '@/components/common/SectionHeader';
@@ -9,7 +10,15 @@ import { Goal } from './Goal';
 import { GoalAddButton } from './GoalAddButton';
 
 export function GoalsPage({ websiteId }: { websiteId: string }) {
-  const { data, isLoading, error } = useReportsQuery({ websiteId, type: 'goal' });
+  return (
+    <DataSuspense>
+      <GoalsPageContent websiteId={websiteId} />
+    </DataSuspense>
+  );
+}
+
+function GoalsPageContent({ websiteId }: { websiteId: string }) {
+  const { data, error } = useReportsQuery({ websiteId, type: 'goal' });
   const {
     dateRange: { startDate, endDate },
   } = useDateRange();
@@ -24,7 +33,7 @@ export function GoalsPage({ websiteId }: { websiteId: string }) {
           <GoalAddButton websiteId={websiteId} />
         </SectionHeader>
       )}
-      <LoadingPanel data={data} isLoading={isLoading} error={error}>
+      <LoadingPanel data={data} error={error}>
         {data && (
           <Grid columns={{ base: '1fr', md: '1fr 1fr' }} gap>
             {data.data.map((report: any) => (

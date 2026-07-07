@@ -93,7 +93,6 @@ export function EventDataPivotTable({
     <Column gap="4" minWidth="0" width="100%" maxWidth="100%">
       <LoadingPanel
         data={tableQuery?.data}
-        isLoading={pivotQuery.isLoading}
         isFetching={pivotQuery.isFetching}
         error={pivotQuery.error}
         renderEmpty={() => <Empty />}

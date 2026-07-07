@@ -1,6 +1,7 @@
 'use client';
 import { Grid } from '@umami/react-zen';
 import { firstBy } from 'thenby';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { GridRow } from '@/components/common/GridRow';
 import { PageBody } from '@/components/common/PageBody';
 import { Panel } from '@/components/common/Panel';
@@ -15,11 +16,19 @@ import { RealtimePaths } from './RealtimePaths';
 import { RealtimeReferrers } from './RealtimeReferrers';
 
 export function RealtimePage({ websiteId }: { websiteId: string }) {
-  const { data, isLoading, error } = useRealtimeQuery(websiteId);
+  return (
+    <DataSuspense>
+      <RealtimePageContent websiteId={websiteId} />
+    </DataSuspense>
+  );
+}
+
+function RealtimePageContent({ websiteId }: { websiteId: string }) {
+  const { data, error } = useRealtimeQuery(websiteId);
   const { isMobile } = useMobile();
 
-  if (isLoading || error) {
-    return <PageBody isLoading={isLoading} error={error} />;
+  if (error) {
+    return <PageBody error={error} />;
   }
 
   const countries = percentFilter(

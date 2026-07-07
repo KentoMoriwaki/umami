@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 export async function getWebsiteDateRange(...args: [websiteId: string]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -32,7 +32,7 @@ async function relationalQuery(websiteId: string) {
   return result[0] ?? null;
 }
 
-async function clickhouseQuery(websiteId: string) {
+async function clickhouseSql(websiteId: string) {
   const { rawQuery, parseFilters } = clickhouse;
   const { queryParams } = parseFilters({
     startDate: new Date(DEFAULT_RESET_DATE),

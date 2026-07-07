@@ -1,22 +1,12 @@
 'use client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider, ZenProvider } from '@umami/react-zen';
+import { Loading, RouterProvider, ZenProvider } from '@umami/react-zen';
 import { useRouter } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import { LaneProvider } from 'use-lane';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useLocale } from '@/components/hooks';
 import 'chartjs-adapter-date-fns';
-
-const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60,
-    },
-  },
-});
 
 function MessagesProvider({ children }) {
   const { locale, messages, dir } = useLocale();
@@ -52,9 +42,11 @@ export function Providers({ children }) {
     <ZenProvider>
       <RouterProvider navigate={navigate}>
         <MessagesProvider>
-          <QueryClientProvider client={client}>
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </QueryClientProvider>
+          <LaneProvider>
+            <ErrorBoundary>
+              <Suspense fallback={<Loading placement="absolute" />}>{children}</Suspense>
+            </ErrorBoundary>
+          </LaneProvider>
         </MessagesProvider>
       </RouterProvider>
     </ZenProvider>

@@ -3,6 +3,7 @@ import { Column } from '@umami/react-zen';
 import { useEffect } from 'react';
 import { BoardControls } from '@/app/(main)/boards/[boardId]/BoardControls';
 import { BoardViewBody } from '@/app/(main)/boards/[boardId]/BoardViewBody';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { Empty } from '@/components/common/Empty';
 import { PageBody } from '@/components/common/PageBody';
 import { useBoard, useMessages, useNavigation } from '@/components/hooks';
@@ -36,14 +37,16 @@ export function DashboardViewPage() {
   }
 
   return (
-    <DashboardProvider>
-      <PageBody>
-        <Column>
-          <DashboardViewHeader />
-          <BoardControls />
-          <DashboardContent />
-        </Column>
-      </PageBody>
-    </DashboardProvider>
+    <DataSuspense>
+      <DashboardProvider>
+        <PageBody>
+          <Column>
+            <DashboardViewHeader />
+            <BoardControls />
+            <DashboardContent />
+          </Column>
+        </PageBody>
+      </DashboardProvider>
+    </DataSuspense>
   );
 }

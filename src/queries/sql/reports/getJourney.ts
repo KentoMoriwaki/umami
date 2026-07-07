@@ -27,7 +27,7 @@ export async function getJourney(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -143,7 +143,7 @@ async function relationalQuery(
   ).then(parseResult);
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   parameters: JourneyParameters,
   filters: QueryFilters,

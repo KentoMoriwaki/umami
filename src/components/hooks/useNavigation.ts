@@ -1,11 +1,12 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { buildPath } from '@/lib/url';
 
 export function useNavigation() {
-  const router = useRouter();
+  const nextRouter = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [, startNavigationTransition] = useTransition();
   const [, teamId] = pathname.match(/\/teams\/([a-f0-9-]+)/) || [];
   const [, websiteId] = pathname.match(/\/websites\/([a-f0-9-]+)/) || [];
   const [, linkId] = pathname.match(/\/links\/([a-f0-9-]+)/) || [];
@@ -40,6 +41,23 @@ export function useNavigation() {
   useEffect(() => {
     setQueryParams(Object.fromEntries(searchParams));
   }, [searchParams.toString()]);
+
+  const router = useMemo(
+    () => ({
+      ...nextRouter,
+      push: (...args: Parameters<typeof nextRouter.push>) => {
+        startNavigationTransition(() => {
+          nextRouter.push(...args);
+        });
+      },
+      replace: (...args: Parameters<typeof nextRouter.replace>) => {
+        startNavigationTransition(() => {
+          nextRouter.replace(...args);
+        });
+      },
+    }),
+    [nextRouter, startNavigationTransition],
+  );
 
   return {
     router,

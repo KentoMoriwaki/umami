@@ -9,13 +9,19 @@ import {
   Grid,
   Icon,
   ListSeparator,
-  Loading,
   Row,
   Text,
   TextField,
 } from '@umami/react-zen';
 import { Fragment, useState } from 'react';
-import { useApi, useMessages, useMobile, useReportQuery, useUpdateQuery } from '@/components/hooks';
+import {
+  useApi,
+  useLaneQuery,
+  useMessages,
+  useMobile,
+  useReportQuery,
+  useUpdateQuery,
+} from '@/components/hooks';
 import { Plus, X } from '@/components/icons';
 import { ActionSelect } from '@/components/input/ActionSelect';
 import { LookupField } from '@/components/input/LookupField';
@@ -36,13 +42,13 @@ function StepRow({
 }) {
   const { t, labels } = useMessages();
   const { isMobile } = useMobile();
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const [eventName, setEventName] = useState(initialEventName ?? '');
   const { startAt, endAt } = getEventDataDateRange();
 
-  const { data: eventProperties } = useQuery<Array<{ propertyName: string }>>({
-    queryKey: ['event-data:properties', { websiteId, eventName, searchValue: '', startAt, endAt }],
-    queryFn: () =>
+  const { data: eventProperties } = useLaneQuery<Array<{ propertyName: string }>>({
+    laneKey: ['event-data:properties', { websiteId, eventName, searchValue: '', startAt, endAt }],
+    loader: () =>
       get(`/websites/${websiteId}/event-data/properties`, {
         startAt,
         endAt,
@@ -159,7 +165,7 @@ export function FunnelEditForm({
   onClose?: () => void;
 }) {
   const { t, labels } = useMessages();
-  const { data, isLoading } = useReportQuery(id);
+  const { data } = useReportQuery(id);
   const { mutateAsync, error, isPending, touch } = useUpdateQuery(`/reports${id ? `/${id}` : ''}`);
 
   const handleSubmit = async ({
@@ -181,10 +187,6 @@ export function FunnelEditForm({
       },
     );
   };
-
-  if (id && isLoading) {
-    return <Loading placement="absolute" />;
-  }
 
   const defaultValues = {
     name: data?.name || '',

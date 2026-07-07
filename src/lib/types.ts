@@ -1,11 +1,15 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
+import type { LaneUseOptions } from 'use-lane';
 import type { Board as PrismaBoard } from '@/generated/prisma/client';
 import type { DATA_TYPE, OPERATORS, ROLES } from './constants';
 import type { TIME_UNIT } from './date';
 
 export type ObjectValues<T> = T[keyof T];
 
-export type ReactQueryOptions<T = any> = Omit<UseQueryOptions<T, Error, T>, 'queryKey' | 'queryFn'>;
+export type LaneDataOptions<T = any, TSelected = T> = LaneUseOptions & {
+  enabled?: boolean;
+  refetchInterval?: number;
+  select?: (data: T) => TSelected;
+};
 
 export type TimeUnit = ObjectValues<typeof TIME_UNIT>;
 export type Role = ObjectValues<typeof ROLES>;

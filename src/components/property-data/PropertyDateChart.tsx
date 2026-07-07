@@ -281,12 +281,7 @@ export function PropertyDateChart({
 
   return (
     <Column gap="4">
-      <LoadingPanel
-        isLoading={query.isLoading}
-        isFetching={query.isFetching}
-        error={query.error}
-        minHeight="100px"
-      >
+      <LoadingPanel isFetching={query.isFetching} error={query.error} minHeight="100px">
         <MetricsBar padding="2">
           <InsightCard
             label="Top weekday"
@@ -326,7 +321,7 @@ export function PropertyDateChart({
           />
         </MetricsBar>
       </LoadingPanel>
-      <LoadingPanel isLoading={query.isLoading} error={query.error} minHeight="400px">
+      <LoadingPanel error={query.error} minHeight="400px">
         {chartData && (
           <BarChart
             chartData={chartData}
@@ -341,7 +336,6 @@ export function PropertyDateChart({
       </LoadingPanel>
       <LoadingPanel
         data={weekdayTableData}
-        isLoading={query.isLoading}
         isFetching={query.isFetching}
         error={query.error}
         minHeight="300px"

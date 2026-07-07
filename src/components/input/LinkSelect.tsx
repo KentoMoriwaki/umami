@@ -21,7 +21,7 @@ export function LinkSelect({
   const { data: link } = useLinkQuery(linkId);
   const [name, setName] = useState<string>(link?.name);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useLinksQuery({ teamId }, { search, pageSize: 20 });
+  const { data } = useLinksQuery({ teamId }, { search, pageSize: 20 });
   const listItems: { id: string; name: string }[] = data?.data || [];
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export function LinkSelect({
     <Select
       {...props}
       value={linkId}
-      isLoading={isLoading}
       allowSearch={true}
       searchValue={search}
       onSearch={setSearch}

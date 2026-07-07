@@ -128,10 +128,7 @@ export function parsePropertyFilters(
     const rawOperator = prefixedDotMatch ? prefixedDotMatch[2] : untypedDotMatch?.[1];
     const operator = resolveOperator(rawOperator);
 
-    if (
-      !operator ||
-      (explicitDataType !== undefined && !isValidEventDataType(explicitDataType))
-    ) {
+    if (!operator || (explicitDataType !== undefined && !isValidEventDataType(explicitDataType))) {
       return [];
     }
 

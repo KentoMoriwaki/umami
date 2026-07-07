@@ -1,8 +1,9 @@
 import { serializePropertyFilters } from '@/lib/params';
-import type { EventDataSeriesPoint, PropertyFilter, ReactQueryOptions } from '@/lib/types';
+import type { EventDataSeriesPoint, LaneDataOptions, PropertyFilter } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 import type { PropertyDataSource } from './usePropertyFieldsQuery';
 
 export function usePropertyArraySeriesQuery(
@@ -11,14 +12,14 @@ export function usePropertyArraySeriesQuery(
   propertyName: string,
   propertyFilters: PropertyFilter[] = [],
   eventName?: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const params = useFilterParameters({ includePagination: false });
 
-  return useQuery<EventDataSeriesPoint[]>({
-    queryKey: [
+  return useLaneQuery<EventDataSeriesPoint[]>({
+    laneKey: [
       `websites:${source}-data:array-series`,
       {
         websiteId,
@@ -32,7 +33,7 @@ export function usePropertyArraySeriesQuery(
         ...params,
       },
     ],
-    queryFn: () =>
+    loader: () =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data-pivot/array-series`

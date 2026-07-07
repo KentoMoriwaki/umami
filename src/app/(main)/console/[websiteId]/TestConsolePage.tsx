@@ -2,6 +2,7 @@
 import { Button, Column, Grid, Heading } from '@umami/react-zen';
 import Script from 'next/script';
 import { WebsiteChart } from '@/app/(main)/websites/[websiteId]/WebsiteChart';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import Link from '@/components/common/Link';
 import { PageBody } from '@/components/common/PageBody';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -10,6 +11,14 @@ import { useWebsiteQuery } from '@/components/hooks';
 import { EventsChart } from '@/components/metrics/EventsChart';
 
 export function TestConsolePage({ websiteId }: { websiteId: string }) {
+  return (
+    <DataSuspense>
+      <TestConsoleContent websiteId={websiteId} />
+    </DataSuspense>
+  );
+}
+
+function TestConsoleContent({ websiteId }: { websiteId: string }) {
   const { data } = useWebsiteQuery(websiteId);
 
   function handleRunScript() {

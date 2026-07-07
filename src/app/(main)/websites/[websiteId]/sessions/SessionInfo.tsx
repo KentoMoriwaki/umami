@@ -14,9 +14,7 @@ export function SessionInfo({ data }) {
   return (
     <Grid columns="repeat(auto-fit, minmax(200px, 1fr)" gap>
       <Info label={t(labels.distinctId)} icon={<KeyRound />}>
-        <span style={{ overflowWrap: 'anywhere' }}>
-          {data?.distinctId}
-        </span>
+        <span style={{ overflowWrap: 'anywhere' }}>{data?.distinctId}</span>
       </Info>
 
       <Info label={t(labels.lastSeen)} icon={<Calendar />}>

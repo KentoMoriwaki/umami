@@ -11,10 +11,10 @@ import { removeItem, setItem } from '@/lib/storage';
 import { UpdateNotice } from './UpdateNotice';
 
 export function App({ children }) {
-  const { user, isLoading, error } = useLoginQuery();
+  const { user, error } = useLoginQuery();
   const config = useConfig();
   const { pathname, router, teamId } = useNavigation();
-  const { isLoading: isTeamLoading, error: teamError } = useTeamQuery(teamId);
+  const { error: teamError } = useTeamQuery(teamId);
 
   useEffect(() => {
     if (teamId) {
@@ -31,7 +31,7 @@ export function App({ children }) {
     }
   }, [teamId, teamError, router]);
 
-  if (isLoading || !config || (teamId && isTeamLoading)) {
+  if (!config) {
     return <Loading placement="absolute" />;
   }
 

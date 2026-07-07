@@ -15,7 +15,7 @@ export async function getUTM(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -53,11 +53,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseQuery(
-  websiteId: string,
-  parameters: UTMParameters,
-  filters: QueryFilters,
-) {
+async function clickhouseSql(websiteId: string, parameters: UTMParameters, filters: QueryFilters) {
   const { column, startDate, endDate } = parameters;
   const { parseFilters, rawQuery } = clickhouse;
   const { filterQuery, cohortQuery, queryParams } = parseFilters({

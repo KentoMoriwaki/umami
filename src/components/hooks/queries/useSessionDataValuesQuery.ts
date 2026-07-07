@@ -1,23 +1,24 @@
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useSessionDataValuesQuery(
   websiteId: string,
   propertyName: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const filters = useFilterParameters();
 
-  return useQuery<any>({
-    queryKey: [
+  return useLaneQuery<any>({
+    laneKey: [
       'websites:session-data:values',
       { websiteId, propertyName, startAt, endAt, unit, timezone, ...filters },
     ],
-    queryFn: () =>
+    loader: () =>
       get(`/websites/${websiteId}/session-data/values`, {
         startAt,
         endAt,

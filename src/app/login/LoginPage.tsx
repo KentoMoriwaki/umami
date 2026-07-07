@@ -6,7 +6,7 @@ import { useLoginQuery } from '@/components/hooks';
 import { LoginForm } from './LoginForm';
 
 export function LoginPage() {
-  const { user, isLoading } = useLoginQuery();
+  const { user } = useLoginQuery();
   const router = useRouter();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function LoginPage() {
     }
   }, [user, router]);
 
-  if (isLoading || user) {
+  if (user) {
     return <Loading placement="absolute" />;
   }
 

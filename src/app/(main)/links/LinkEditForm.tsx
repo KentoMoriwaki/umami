@@ -7,7 +7,6 @@ import {
   Grid,
   Icon,
   Label,
-  Loading,
   Row,
   TextField,
 } from '@umami/react-zen';
@@ -44,7 +43,7 @@ export function LinkEditForm({
   const cloudMode = config?.cloudMode;
   const linksUrl = config?.linksUrl;
   const hostUrl = linksUrl || LINKS_URL;
-  const { data, isLoading } = useLinkQuery(linkId);
+  const { data } = useLinkQuery(linkId);
   const [defaultSlug] = useState(generateId());
 
   const handleSubmit = async (data: any) => {
@@ -65,10 +64,6 @@ export function LinkEditForm({
     }
     return true;
   };
-
-  if (linkId && isLoading) {
-    return <Loading placement="absolute" />;
-  }
 
   return (
     <Form

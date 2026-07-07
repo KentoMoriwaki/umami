@@ -12,13 +12,13 @@ export interface WebsiteShareFormProps {
 
 export function WebsiteShareForm({ websiteId }: WebsiteShareFormProps) {
   const { t, labels, messages } = useMessages();
-  const { data, error, isLoading } = useWebsiteSharesQuery({ websiteId });
+  const { data, error } = useWebsiteSharesQuery({ websiteId });
 
   const shares = data?.data || [];
   const hasShares = shares.length > 0;
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} error={error}>
+    <LoadingPanel data={data} error={error}>
       <Column gap="4">
         <Row justifyContent="space-between" alignItems="center">
           <Heading>{t(labels.share)}</Heading>

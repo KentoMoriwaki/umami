@@ -8,7 +8,7 @@ const FUNCTION_NAME = 'getActiveVisitors';
 export async function getActiveVisitors(...args: [websiteId: string]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -30,7 +30,7 @@ async function relationalQuery(websiteId: string) {
   return result?.[0] ?? null;
 }
 
-async function clickhouseQuery(websiteId: string): Promise<{ x: number }> {
+async function clickhouseSql(websiteId: string): Promise<{ x: number }> {
   const { rawQuery } = clickhouse;
   const startDate = subMinutes(new Date(), 5);
 

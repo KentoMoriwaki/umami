@@ -66,7 +66,15 @@ export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
  * - Objects have a max of 50 properties. Arrays are considered 1 property.
  */
 export interface EventData {
-  [key: string]: boolean | number | string | EventData | boolean[] | number[] | string[] | EventData[];
+  [key: string]:
+    | boolean
+    | number
+    | string
+    | EventData
+    | boolean[]
+    | number[]
+    | string[]
+    | EventData[];
 }
 
 export type EventProperties = {

@@ -1,4 +1,5 @@
 import { useApi } from '../useApi';
+import { useLaneQuery } from '../useLaneQuery';
 
 interface ReplayQueryOptions {
   until?: number;
@@ -11,12 +12,12 @@ export function useReplayQuery(
   replayId: string,
   options: ReplayQueryOptions = {},
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { until, chunkIndex, eventIndex } = options;
 
-  return useQuery({
-    queryKey: ['replay', { websiteId, replayId, until, chunkIndex, eventIndex }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['replay', { websiteId, replayId, until, chunkIndex, eventIndex }],
+    loader: () => {
       return get(`/websites/${websiteId}/replays/${replayId}`, { until, chunkIndex, eventIndex });
     },
     enabled: Boolean(websiteId && replayId),

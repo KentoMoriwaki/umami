@@ -1,8 +1,8 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export type WebsiteMetricsData = {
   x: string;
@@ -12,14 +12,14 @@ export type WebsiteMetricsData = {
 export function useWebsiteMetricsQuery(
   websiteId: string,
   params: { type: string; limit?: number; search?: string },
-  options?: ReactQueryOptions<WebsiteMetricsData>,
+  options?: LaneDataOptions<WebsiteMetricsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters();
 
-  return useQuery<WebsiteMetricsData>({
-    queryKey: [
+  return useLaneQuery<WebsiteMetricsData>({
+    laneKey: [
       'websites:metrics',
       {
         websiteId,
@@ -29,7 +29,7 @@ export function useWebsiteMetricsQuery(
         ...params,
       },
     ],
-    queryFn: async () =>
+    loader: async () =>
       get(`/websites/${websiteId}/metrics`, {
         startAt,
         endAt,
@@ -37,7 +37,6 @@ export function useWebsiteMetricsQuery(
         ...params,
       }),
     enabled: !!websiteId,
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

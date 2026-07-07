@@ -15,10 +15,13 @@ export function WebsiteMetricsBar({
 }) {
   const { isAllTime, dateCompare } = useDateRange();
   const { t, labels, getErrorMessage } = useMessages();
-  const { data, isLoading, isFetching, error } = useWebsiteStatsQuery({
+  const { data, isFetching, error } = useWebsiteStatsQuery({
     websiteId,
     compare: compareMode ? dateCompare?.compare : undefined,
   });
+  const errorMessage = error
+    ? getErrorMessage(error instanceof Error ? error : new Error(String(error)))
+    : undefined;
 
   const { pageviews, visitors, visits, bounces, totaltime, comparison } = data || {};
 
@@ -64,13 +67,7 @@ export function WebsiteMetricsBar({
     : null;
 
   return (
-    <LoadingPanel
-      data={metrics}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      error={getErrorMessage(error)}
-      minHeight="136px"
-    >
+    <LoadingPanel data={metrics} isFetching={isFetching} error={errorMessage} minHeight="136px">
       <MetricsBar>
         {metrics?.map(({ label, value, prev, change, formatValue, reverseColors }) => {
           return (

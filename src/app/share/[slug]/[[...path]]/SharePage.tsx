@@ -21,6 +21,7 @@ import { SessionsPage } from '@/app/(main)/websites/[websiteId]/sessions/Session
 import { WebsiteHeader } from '@/app/(main)/websites/[websiteId]/WebsiteHeader';
 import { WebsitePage } from '@/app/(main)/websites/[websiteId]/WebsitePage';
 import { WebsiteProvider } from '@/app/(main)/websites/WebsiteProvider';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { useShare } from '@/components/hooks';
 import { MobileMenuButton } from '@/components/input/MobileMenuButton';
@@ -131,12 +132,14 @@ export function SharePage() {
         <ShareNav collapsed={navCollapsed} onCollapse={handleCollapse} />
       </Column>
       <PageBody gap>
-        <WebsiteProvider websiteId={websiteId}>
-          <Column>
-            <WebsiteHeader showActions={false} allowLink={false} />
-            <PageComponent websiteId={websiteId} />
-          </Column>
-        </WebsiteProvider>
+        <DataSuspense>
+          <WebsiteProvider websiteId={websiteId}>
+            <Column>
+              <WebsiteHeader showActions={false} allowLink={false} />
+              <PageComponent websiteId={websiteId} />
+            </Column>
+          </WebsiteProvider>
+        </DataSuspense>
       </PageBody>
     </Grid>
   );

@@ -7,11 +7,11 @@ const FUNCTION_NAME = 'getEventDataUsage';
 export function getEventDataUsage(...args: [websiteIds: string[], filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: notImplemented,
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
-function clickhouseQuery(
+function clickhouseSql(
   websiteIds: string[],
   filters: QueryFilters,
 ): Promise<{ websiteId: string; count: number }[]> {

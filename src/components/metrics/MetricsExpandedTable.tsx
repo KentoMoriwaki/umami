@@ -37,7 +37,7 @@ export function MetricsExpandedTable({
   const isType = ['browser', 'country', 'device', 'os'].includes(type);
   const showBounceDuration = SESSION_COLUMNS.includes(type);
 
-  const { data, isLoading, isFetching, error } = useWebsiteExpandedMetricsQuery(websiteId, {
+  const { data, isFetching, error } = useWebsiteExpandedMetricsQuery(websiteId, {
     type,
     search: isType ? undefined : search,
     ...params,
@@ -64,7 +64,6 @@ export function MetricsExpandedTable({
       <LoadingPanel
         data={data}
         isFetching={isFetching}
-        isLoading={isLoading}
         error={error}
         height="100%"
         loadingIcon="spinner"

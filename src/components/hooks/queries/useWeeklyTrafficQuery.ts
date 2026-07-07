@@ -1,20 +1,16 @@
 import { useFilterParameters } from '@/components/hooks/useFilterParameters';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useWeeklyTrafficQuery(websiteId: string, params?: Record<string, string | number>) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`sessions`);
-  const { startAt, endAt, unit, timezone } = useDateParameters();
+  const { get } = useApi();
+  const { startAt, endAt, timezone } = useDateParameters();
   const filters = useFilterParameters();
 
-  return useQuery({
-    queryKey: [
-      'sessions',
-      { websiteId, modified, startAt, endAt, timezone, ...params, ...filters },
-    ],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['sessions', { websiteId, startAt, endAt, timezone, ...params, ...filters }],
+    loader: () => {
       return get(`/websites/${websiteId}/sessions/weekly`, {
         startAt,
         endAt,

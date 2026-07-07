@@ -7,7 +7,7 @@ const FUNCTION_NAME = 'getSessionData';
 export async function getSessionData(...args: [websiteId: string, sessionId: string]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -35,7 +35,7 @@ async function relationalQuery(websiteId: string, sessionId: string) {
   );
 }
 
-async function clickhouseQuery(websiteId: string, sessionId: string) {
+async function clickhouseSql(websiteId: string, sessionId: string) {
   const { rawQuery } = clickhouse;
 
   return rawQuery(

@@ -19,7 +19,7 @@ export async function GET(
     'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
   };
 
-  if (!website || !website.recorderEnabled) {
+  if (!website?.recorderEnabled) {
     return Response.json({ enabled: false }, { headers });
   }
 

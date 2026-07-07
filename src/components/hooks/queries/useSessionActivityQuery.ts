@@ -1,4 +1,5 @@
 import { useApi } from '../useApi';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useSessionActivityQuery(
   websiteId: string,
@@ -6,11 +7,11 @@ export function useSessionActivityQuery(
   startDate: Date,
   endDate: Date,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['session:activity', { websiteId, sessionId, startDate, endDate }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['session:activity', { websiteId, sessionId, startDate, endDate }],
+    loader: () => {
       return get(`/websites/${websiteId}/sessions/${sessionId}/activity`, {
         startAt: +new Date(startDate),
         endAt: +new Date(endDate),

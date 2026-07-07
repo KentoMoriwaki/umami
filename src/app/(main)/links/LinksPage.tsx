@@ -1,6 +1,7 @@
 'use client';
 import { Column } from '@umami/react-zen';
 import { LinksDataTable } from '@/app/(main)/links/LinksDataTable';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
@@ -9,6 +10,14 @@ import { ROLES } from '@/lib/constants';
 import { LinkAddButton } from './LinkAddButton';
 
 export function LinksPage() {
+  return (
+    <DataSuspense>
+      <LinksPageContent />
+    </DataSuspense>
+  );
+}
+
+function LinksPageContent() {
   const { user } = useLoginQuery();
   const { t, labels } = useMessages();
   const { teamId } = useNavigation();

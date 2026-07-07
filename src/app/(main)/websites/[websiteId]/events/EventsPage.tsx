@@ -3,6 +3,7 @@ import { Column, Tab, TabList, TabPanel, Tabs } from '@umami/react-zen';
 import { type Key, useState } from 'react';
 import { SessionModal } from '@/app/(main)/websites/[websiteId]/sessions/SessionModal';
 import { WebsiteControls } from '@/app/(main)/websites/[websiteId]/WebsiteControls';
+import { DataSuspense } from '@/components/common/DataSuspense';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { Panel } from '@/components/common/Panel';
 import { useDateRange, useMessages } from '@/components/hooks';
@@ -19,12 +20,23 @@ import { EventsDataTable } from './EventsDataTable';
 const KEY_NAME = 'umami.events.tab';
 
 export function EventsPage({ websiteId }) {
+  return (
+    <DataSuspense>
+      <EventsPageContent websiteId={websiteId} />
+    </DataSuspense>
+  );
+}
+
+function EventsPageContent({ websiteId }) {
   const [tab, setTab] = useState(getItem(KEY_NAME) || 'chart');
   const { isAllTime } = useDateRange();
   const { t, labels, getErrorMessage } = useMessages();
-  const { data, isLoading, isFetching, error } = useEventStatsQuery({
+  const { data, isFetching, error } = useEventStatsQuery({
     websiteId,
   });
+  const errorMessage = error
+    ? getErrorMessage(error instanceof Error ? error : new Error(String(error)))
+    : undefined;
 
   const handleSelect = (value: Key) => {
     setItem(KEY_NAME, value);
@@ -65,13 +77,7 @@ export function EventsPage({ websiteId }) {
   return (
     <Column gap="3">
       <WebsiteControls websiteId={websiteId} />
-      <LoadingPanel
-        data={metrics}
-        isLoading={isLoading}
-        isFetching={isFetching}
-        error={getErrorMessage(error)}
-        minHeight="136px"
-      >
+      <LoadingPanel data={metrics} isFetching={isFetching} error={errorMessage} minHeight="136px">
         <MetricsBar>
           {metrics?.map(({ label, value, change, formatValue }) => {
             return (

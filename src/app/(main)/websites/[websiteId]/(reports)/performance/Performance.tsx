@@ -63,7 +63,7 @@ export function Performance({ websiteId, startDate, endDate, unit }: Performance
   const { t, labels } = useMessages();
   const { locale, dateLocale } = useLocale();
 
-  const { data, error, isLoading } = useResultQuery<any>('performance', {
+  const { data, error } = useResultQuery<any>('performance', {
     websiteId,
     startDate,
     endDate,
@@ -136,7 +136,7 @@ export function Performance({ websiteId, startDate, endDate, unit }: Performance
 
   const renderXLabel = useCallback(renderDateLabels(unit, locale), [unit, locale]);
 
-  const threshold = WEB_VITALS_THRESHOLDS[selectedMetric as keyof typeof WEB_VITALS_THRESHOLDS];
+  const _threshold = WEB_VITALS_THRESHOLDS[selectedMetric as keyof typeof WEB_VITALS_THRESHOLDS];
   const isCls = selectedMetric === 'cls';
   const metricLabel = t(labels[selectedMetric]) || selectedMetric.toUpperCase();
   const formatListCount = isCls
@@ -158,7 +158,7 @@ export function Performance({ websiteId, startDate, endDate, unit }: Performance
           ))}
         </Select>
       </Grid>
-      <LoadingPanel data={data} isLoading={isLoading} error={error}>
+      <LoadingPanel data={data} error={error}>
         {data && (
           <Column gap>
             <Grid columns={{ base: '1fr 1fr', lg: 'repeat(5, 1fr)' }} gap>

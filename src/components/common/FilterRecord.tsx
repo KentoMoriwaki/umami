@@ -1,14 +1,4 @@
-import {
-  Button,
-  Column,
-  Grid,
-  Icon,
-  Label,
-  ListItem,
-  Loading,
-  Select,
-  TextField,
-} from '@umami/react-zen';
+import { Button, Column, Grid, Icon, Label, ListItem, Select, TextField } from '@umami/react-zen';
 import { useState } from 'react';
 import { Empty } from '@/components/common/Empty';
 import { MultiSelect } from '@/components/common/MultiSelect';
@@ -46,7 +36,7 @@ export function FilterRecord({
   const [selected, setSelected] = useState<string[]>(initValues);
   const [search, setSearch] = useState('');
   const { formatValue } = useFormat();
-  const { data, isLoading } = useWebsiteValuesQuery({
+  const { data } = useWebsiteValuesQuery({
     websiteId,
     type,
     search,
@@ -104,7 +94,7 @@ export function FilterRecord({
               renderValue={values =>
                 values.length > 0 ? values.map(v => formatValue(v, type)).join(', ') : undefined
               }
-              renderEmptyState={() => (isLoading ? <Loading icon="dots" /> : <Empty />)}
+              renderEmptyState={() => <Empty />}
               allowSearch
             >
               {items.map(({ value }) => (

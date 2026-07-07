@@ -1,7 +1,8 @@
-import { keepPreviousData, type UseQueryOptions } from '@tanstack/react-query';
 import { useDateParameters } from '@/components/hooks/useDateParameters';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export interface RevenueStatsData {
   sum: number;
@@ -28,18 +29,18 @@ export function useRevenueStatsQuery(
     currency: string;
     compare?: string;
   },
-  options?: UseQueryOptions<RevenueStatsData, Error, RevenueStatsData>,
+  options?: LaneDataOptions<RevenueStatsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
 
-  return useQuery<RevenueStatsData>({
-    queryKey: [
+  return useLaneQuery<RevenueStatsData>({
+    laneKey: [
       'websites:revenue:stats',
       { websiteId, currency, compare, startAt, endAt, ...filters },
     ],
-    queryFn: () =>
+    loader: () =>
       get(`/websites/${websiteId}/revenue/stats`, {
         currency,
         compare,
@@ -48,7 +49,6 @@ export function useRevenueStatsQuery(
         ...filters,
       }),
     enabled: !!(websiteId && currency),
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

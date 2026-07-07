@@ -9,7 +9,6 @@ import { Flame } from '@/components/icons';
 import { FilterButtons } from '@/components/input/FilterButtons';
 import type { HeatmapMode } from '@/queries/sql';
 import { Heatmap } from './Heatmap';
-import styles from './Heatmap.module.css';
 
 export function HeatmapsPage({ websiteId }: { websiteId: string }) {
   const [urlPathByMode, setUrlPathByMode] = useState<Record<HeatmapMode, string>>({

@@ -14,7 +14,7 @@ export function LinkMetricsBar({
 }) {
   const { isAllTime } = useDateRange();
   const { t, labels } = useMessages();
-  const { data, isLoading, isFetching, error } = useWebsiteStatsQuery({ websiteId: linkId });
+  const { data, isFetching, error } = useWebsiteStatsQuery({ websiteId: linkId });
 
   const { pageviews, visitors, visits, comparison } = data || {};
 
@@ -42,13 +42,7 @@ export function LinkMetricsBar({
     : null;
 
   return (
-    <LoadingPanel
-      data={metrics}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      error={error}
-      minHeight="136px"
-    >
+    <LoadingPanel data={metrics} isFetching={isFetching} error={error} minHeight="136px">
       <MetricsBar>
         {metrics?.map(({ label, value, prev, change, formatValue, reverseColors }: any) => {
           return (

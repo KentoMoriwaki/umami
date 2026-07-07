@@ -29,7 +29,7 @@ export function WebsiteSelect({
   const [name, setName] = useState<string>(website?.name);
   const [search, setSearch] = useState('');
   const { user } = useLoginQuery();
-  const { data, isLoading } = useUserWebsitesQuery(
+  const { data } = useUserWebsitesQuery(
     { userId: user?.id, teamId },
     { search, pageSize: 100, includeTeams },
   );
@@ -75,7 +75,6 @@ export function WebsiteSelect({
     <Select
       {...props}
       value={websiteId}
-      isLoading={isLoading}
       allowSearch={true}
       searchValue={search}
       onSearch={handleSearch}

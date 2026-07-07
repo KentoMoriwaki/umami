@@ -16,7 +16,7 @@ export async function getSessionDataProperties(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -77,7 +77,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   filters: QueryFilters,
   propertyFilters: PropertyFilter[] = [],

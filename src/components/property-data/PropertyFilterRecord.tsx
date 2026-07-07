@@ -10,7 +10,6 @@ import {
   Icon,
   Label,
   ListItem,
-  Loading,
   Popover,
   Row,
   Select,
@@ -90,7 +89,7 @@ export function PropertyFilterRecord({
           : STRING_OPERATORS;
   const isFreeText = !isArray && FREE_TEXT_OPERATORS.includes(filter.operator);
 
-  const { data, isLoading } = usePropertyValuesQuery(
+  const { data } = usePropertyValuesQuery(
     source,
     websiteId,
     filter.propertyName,
@@ -188,13 +187,7 @@ export function PropertyFilterRecord({
               formValue="text"
               allowsEmptyCollection
               allowsCustomValue
-              renderEmptyState={() =>
-                isLoading ? (
-                  <Loading placement="center" icon="dots" />
-                ) : (
-                  <Empty message={t(messages.noResultsFound)} />
-                )
-              }
+              renderEmptyState={() => <Empty message={t(messages.noResultsFound)} />}
             >
               {filteredValues.map(v => (
                 <ListItem key={v} id={v}>
@@ -216,13 +209,7 @@ export function PropertyFilterRecord({
               onSearch={setSearch}
               allowSearch
               renderValue={vals => (vals.length > 0 ? vals.join(', ') : undefined)}
-              renderEmptyState={() =>
-                isLoading ? (
-                  <Loading placement="center" icon="dots" />
-                ) : (
-                  <Empty message={t(messages.noResultsFound)} />
-                )
-              }
+              renderEmptyState={() => <Empty message={t(messages.noResultsFound)} />}
             >
               {filteredValues.map(v => (
                 <ListItem key={v} id={v}>

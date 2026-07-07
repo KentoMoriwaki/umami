@@ -1,21 +1,18 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useWebsiteSegmentQuery(
   websiteId: string,
   segmentId: string,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`segments`);
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['website:segments', { websiteId, segmentId, modified }],
-    queryFn: () => get(`/websites/${websiteId}/segments/${segmentId}`),
+  return useLaneQuery({
+    laneKey: ['website:segments', { websiteId, segmentId }],
+    loader: () => get(`/websites/${websiteId}/segments/${segmentId}`),
     enabled: !!(websiteId && segmentId),
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

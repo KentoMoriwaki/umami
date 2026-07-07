@@ -1,15 +1,13 @@
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
 import { usePagedQuery } from '../usePagedQuery';
 
-export function usePixelSharesQuery({ pixelId }: { pixelId: string }, options?: ReactQueryOptions) {
-  const { modified } = useModified('shares');
+export function usePixelSharesQuery({ pixelId }: { pixelId: string }, options?: LaneDataOptions) {
   const { get } = useApi();
 
   return usePagedQuery({
-    queryKey: ['pixelShares', { pixelId, modified }],
-    queryFn: pageParams => {
+    laneKey: ['pixelShares', { pixelId }],
+    loader: pageParams => {
       return get(`/pixels/${pixelId}/shares`, pageParams);
     },
     ...options,

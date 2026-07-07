@@ -1,17 +1,14 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
-export function useBoardQuery(boardId: string, options?: ReactQueryOptions) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`board:${boardId}`);
+export function useBoardQuery(boardId: string, options?: LaneDataOptions) {
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['boards', { boardId, modified }],
-    queryFn: () => get(`/boards/${boardId}`),
+  return useLaneQuery({
+    laneKey: ['boards', { boardId }],
+    loader: () => get(`/boards/${boardId}`),
     enabled: !!boardId && boardId !== 'create',
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

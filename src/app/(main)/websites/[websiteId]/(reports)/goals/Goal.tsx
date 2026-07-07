@@ -27,7 +27,7 @@ export function Goal({ id, name, type, parameters, websiteId, startDate, endDate
   const { t, labels } = useMessages();
   const { pathname } = useNavigation();
   const isSharePage = pathname.includes('/share/');
-  const { data, error, isLoading, isFetching } = useResultQuery<GoalData>(type, {
+  const { data, error, isFetching } = useResultQuery<GoalData>(type, {
     websiteId,
     startDate,
     endDate,
@@ -36,7 +36,7 @@ export function Goal({ id, name, type, parameters, websiteId, startDate, endDate
   const isPage = parameters?.type === 'path';
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} isFetching={isFetching} error={error}>
+    <LoadingPanel data={data} isFetching={isFetching} error={error}>
       {data && (
         <Grid gap>
           <Grid columns="1fr auto" gap>

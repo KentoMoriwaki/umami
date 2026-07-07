@@ -35,7 +35,7 @@ export async function getFunnel(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -189,7 +189,7 @@ async function relationalQuery(
   ).then(formatResults(steps));
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   parameters: FunnelParameters,
   filters: QueryFilters,

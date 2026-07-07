@@ -1,13 +1,12 @@
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useReportQuery(reportId: string) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified(`report:${reportId}`);
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['report', { reportId, modified }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['report', { reportId }],
+    loader: () => {
       return get(`/reports/${reportId}`);
     },
     enabled: !!reportId,

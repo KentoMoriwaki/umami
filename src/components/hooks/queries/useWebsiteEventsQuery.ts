@@ -1,5 +1,5 @@
 import { MAX_PAGING_RESULTS } from '@/lib/constants';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
@@ -13,18 +13,18 @@ const EVENT_TYPES = {
 export function useWebsiteEventsQuery(
   websiteId: string,
   params?: Record<string, any>,
-  options?: ReactQueryOptions,
+  options?: LaneDataOptions,
 ) {
   const { get } = useApi();
   const { startAt, endAt, unit, timezone } = useDateParameters();
   const filters = useFilterParameters();
 
   return usePagedQuery({
-    queryKey: [
+    laneKey: [
       'websites:events',
       { websiteId, startAt, endAt, unit, timezone, ...filters, ...params },
     ],
-    queryFn: pageParams =>
+    loader: pageParams =>
       get(`/websites/${websiteId}/events`, {
         startAt,
         endAt,

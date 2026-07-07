@@ -1,5 +1,5 @@
 'use client';
-import { Loading, useToast } from '@umami/react-zen';
+import { useToast } from '@umami/react-zen';
 import { createContext, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useApi, useMessages, useModified, useNavigation } from '@/components/hooks';
@@ -62,14 +62,15 @@ export function BoardProvider({
   editing?: boolean;
   children: ReactNode;
 }) {
-  const { data, isFetching, isLoading } = useBoardQuery(boardId);
-  const { post, useMutation } = useApi();
+  const { data } = useBoardQuery(boardId);
+  const { post } = useApi();
   const { touch } = useModified();
   const { toast } = useToast();
   const { t, labels, messages } = useMessages();
   const { router, renderUrl, teamId } = useNavigation();
 
   const [board, setBoard] = useState<Partial<Board>>(data ?? createDefaultBoard());
+  const [isPending, setIsPending] = useState(false);
   const boardRef = useRef<Partial<Board>>(data ?? createDefaultBoard());
   const layoutGetterRef = useRef<LayoutGetter | null>(null);
 
@@ -90,20 +91,6 @@ export function BoardProvider({
     }
   }, [data]);
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (boardData: Partial<Board>) => {
-      if (boardData.id) {
-        return post(`/boards/${boardData.id}`, boardData);
-      }
-      return post('/boards', {
-        ...boardData,
-        type: boardData.type || BOARD_TYPES.mixed,
-        slug: '',
-        teamId,
-      });
-    },
-  });
-
   const updateBoard = useCallback((data: Partial<Board>) => {
     setBoard(current => {
       const nextBoard = { ...current, ...data };
@@ -123,11 +110,30 @@ export function BoardProvider({
       layoutData ? { ...currentBoard.parameters, ...layoutData } : currentBoard.parameters,
     );
 
-    const result = await mutateAsync({
+    const nextBoard = {
       ...currentBoard,
       name: currentBoard.name || defaultName,
       parameters,
-    });
+    };
+
+    setIsPending(true);
+
+    const result = await (async () => {
+      try {
+        if (nextBoard.id) {
+          return await post(`/boards/${nextBoard.id}`, nextBoard);
+        }
+
+        return await post('/boards', {
+          ...nextBoard,
+          type: nextBoard.type || BOARD_TYPES.mixed,
+          slug: '',
+          teamId,
+        });
+      } finally {
+        setIsPending(false);
+      }
+    })();
 
     toast(t(messages.saved));
     touch('boards');
@@ -139,11 +145,7 @@ export function BoardProvider({
     }
 
     return result;
-  }, [mutateAsync, toast, t, labels.untitled, messages.saved, touch, router, renderUrl]);
-
-  if (boardId && isFetching && isLoading) {
-    return <Loading placement="absolute" />;
-  }
+  }, [post, teamId, toast, t, labels.untitled, messages.saved, touch, router, renderUrl]);
 
   return (
     <BoardContext.Provider

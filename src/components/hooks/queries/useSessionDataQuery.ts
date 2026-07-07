@@ -1,11 +1,12 @@
 import { useApi } from '../useApi';
+import { useLaneQuery } from '../useLaneQuery';
 
 export function useSessionDataQuery(websiteId: string, sessionId: string) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['session:data', { websiteId, sessionId }],
-    queryFn: () => {
+  return useLaneQuery({
+    laneKey: ['session:data', { websiteId, sessionId }],
+    loader: () => {
       return get(`/websites/${websiteId}/sessions/${sessionId}/properties`, { websiteId });
     },
   });

@@ -79,7 +79,7 @@ export async function getHeatmap(
 ): Promise<HeatmapResult> {
   return runQuery({
     [PRISMA]: () => relationalQuery(websiteId, parameters),
-    [CLICKHOUSE]: () => clickhouseQuery(websiteId, parameters),
+    [CLICKHOUSE]: () => clickhouseSql(websiteId, parameters),
   });
 }
 
@@ -280,7 +280,7 @@ async function relationalQuery(
   return { mode, pages, points: rawPoints, snapshot, scroll: emptyScroll() };
 }
 
-async function clickhouseQuery(
+async function clickhouseSql(
   websiteId: string,
   parameters: HeatmapParameters,
 ): Promise<HeatmapResult> {
@@ -331,12 +331,11 @@ async function clickhouseQuery(
     FUNCTION_NAME,
   );
 
-  const pages: HeatmapPage[] = pageRows
-    .map(p => ({
-      urlPath: p.urlPath,
-      count: Number(p.count),
-      sessions: Number(p.sessions),
-    }));
+  const pages: HeatmapPage[] = pageRows.map(p => ({
+    urlPath: p.urlPath,
+    count: Number(p.count),
+    sessions: Number(p.sessions),
+  }));
 
   if (!urlPath) {
     return { mode, pages, points: [], snapshot: null, scroll: emptyScroll() };

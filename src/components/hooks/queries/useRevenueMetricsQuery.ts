@@ -1,8 +1,8 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export type RevenueMetricType = 'country' | 'region' | 'referrer' | 'channel';
 
@@ -15,14 +15,14 @@ export type RevenueMetricsData = {
 export function useRevenueMetricsQuery(
   websiteId: string,
   params: { type: RevenueMetricType; currency: string },
-  options?: ReactQueryOptions<RevenueMetricsData>,
+  options?: LaneDataOptions<RevenueMetricsData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
 
-  return useQuery<RevenueMetricsData>({
-    queryKey: [
+  return useLaneQuery<RevenueMetricsData>({
+    laneKey: [
       'websites:revenue:metrics',
       {
         websiteId,
@@ -32,7 +32,7 @@ export function useRevenueMetricsQuery(
         ...params,
       },
     ],
-    queryFn: async () =>
+    loader: async () =>
       get(`/websites/${websiteId}/revenue/metrics`, {
         startAt,
         endAt,
@@ -40,7 +40,6 @@ export function useRevenueMetricsQuery(
         ...params,
       }),
     enabled: !!(websiteId && params.currency && params.type),
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

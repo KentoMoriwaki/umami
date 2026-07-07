@@ -7,8 +7,8 @@ export function useSessionReplaysQuery(websiteId: string, sessionId: string) {
   const { startAt, endAt, unit, timezone } = useDateParameters();
 
   return usePagedQuery({
-    queryKey: ['session-replays', { websiteId, sessionId, startAt, endAt, unit, timezone }],
-    queryFn: pageParams => {
+    laneKey: ['session-replays', { websiteId, sessionId, startAt, endAt, unit, timezone }],
+    loader: pageParams => {
       return get(`/websites/${websiteId}/sessions/${sessionId}/replays`, {
         startAt,
         endAt,

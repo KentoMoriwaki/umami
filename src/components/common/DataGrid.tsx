@@ -1,4 +1,3 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import {
   Button,
   Column,
@@ -17,11 +16,12 @@ import {
   type ReactNode,
   useCallback,
   useState,
+  useTransition,
 } from 'react';
 import { Empty } from '@/components/common/Empty';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { Pager } from '@/components/common/Pager';
-import { useMessages, useMobile, useNavigation } from '@/components/hooks';
+import { type LaneQueryResult, useMessages, useMobile, useNavigation } from '@/components/hooks';
 import { getItem, setItem } from '@/lib/storage';
 import type { PageResult } from '@/lib/types';
 
@@ -31,7 +31,7 @@ const DISPLAY_MODE_STORAGE_KEY = 'umami.datagrid.displayMode';
 type DisplayMode = 'table' | 'cards';
 
 export interface DataGridProps {
-  query: UseQueryResult<PageResult<any>, any>;
+  query: LaneQueryResult<PageResult<any>>;
   searchDelay?: number;
   allowSearch?: boolean;
   allowPaging?: boolean;
@@ -52,8 +52,9 @@ export function DataGrid({
   children,
 }: DataGridProps) {
   const { t, labels } = useMessages();
-  const { data, error, isLoading, isFetching } = query;
+  const { data, error, isFetching } = query;
   const { router, updateParams, query: queryParams } = useNavigation();
+  const [isRoutePending, startRouteTransition] = useTransition();
   const [search, setSearch] = useState(queryParams?.search || data?.search || '');
   const showPager = allowPaging && data && data.count > 0;
   const { isMobile } = useMobile();
@@ -63,6 +64,15 @@ export function DataGrid({
   });
 
   const displayMode: DisplayMode | undefined = isMobile ? 'cards' : (userDisplayMode ?? undefined);
+  const dataViewKey = data
+    ? JSON.stringify({
+        page: data.page,
+        pageSize: data.pageSize,
+        orderBy: data.orderBy,
+        sortDescending: data.sortDescending,
+        search: data.search,
+      })
+    : undefined;
 
   const handleToggleDisplayMode = () => {
     const next: DisplayMode = displayMode === 'cards' ? 'table' : 'cards';
@@ -73,13 +83,17 @@ export function DataGrid({
   const handleSearch = (value: string) => {
     if (value !== search) {
       setSearch(value);
-      router.push(updateParams({ search: value, page: 1 }));
+      startRouteTransition(() => {
+        router.push(updateParams({ search: value, page: 1 }));
+      });
     }
   };
 
   const handlePageChange = useCallback(
     (page: number) => {
-      router.push(updateParams({ search, page }));
+      startRouteTransition(() => {
+        router.push(updateParams({ search, page }));
+      });
     },
     [router, updateParams, search],
   );
@@ -104,7 +118,7 @@ export function DataGrid({
       <Row alignItems="center" wrap="wrap" gap>
         {allowSearch && (
           <SearchField
-            value={search}
+            defaultValue={search}
             onSearch={handleSearch}
             delay={searchDelay || DEFAULT_SEARCH_DELAY}
             autoFocus={autoFocus}
@@ -114,7 +128,9 @@ export function DataGrid({
         <Row
           alignItems="center"
           gap
-          style={isMobile ? { width: '100%', justifyContent: 'flex-start' } : { marginLeft: 'auto' }}
+          style={
+            isMobile ? { width: '100%', justifyContent: 'flex-start' } : { marginLeft: 'auto' }
+          }
         >
           {renderActions?.()}
           {!isMobile && viewToggleButton}
@@ -122,13 +138,13 @@ export function DataGrid({
       </Row>
       <LoadingPanel
         data={data?.data}
-        isLoading={isLoading}
-        isFetching={isFetching}
+        isFetching={(isFetching || isRoutePending) && !data}
         error={error}
         renderEmpty={renderEmpty}
       >
         {data && (
           <div
+            key={dataViewKey}
             style={{
               display: 'grid',
               gridTemplateColumns: 'minmax(0, 1fr)',

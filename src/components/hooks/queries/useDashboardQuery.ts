@@ -1,16 +1,13 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
-import { useModified } from '../useModified';
+import { useLaneQuery } from '../useLaneQuery';
 
-export function useDashboardQuery(options?: ReactQueryOptions) {
-  const { get, useQuery } = useApi();
-  const { modified } = useModified('dashboard');
+export function useDashboardQuery(options?: LaneDataOptions) {
+  const { get } = useApi();
 
-  return useQuery({
-    queryKey: ['dashboard', { modified }],
-    queryFn: () => get('/dashboard'),
-    placeholderData: keepPreviousData,
+  return useLaneQuery({
+    laneKey: ['dashboard', {}],
+    loader: () => get('/dashboard'),
     ...options,
   });
 }

@@ -12,7 +12,7 @@ const QUALIFIED_FILTER_COLUMNS = Object.fromEntries(
 export async function getWebsiteSessions(...args: [websiteId: string, filters: QueryFilters]) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
+    [CLICKHOUSE]: () => clickhouseSql(...args),
   });
 }
 
@@ -81,7 +81,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   );
 }
 
-async function clickhouseQuery(websiteId: string, filters: QueryFilters) {
+async function clickhouseSql(websiteId: string, filters: QueryFilters) {
   const { pagedRawQuery, parseFilters, getDateStringSQL } = clickhouse;
   const { search } = filters;
   const { filterQuery, dateQuery, cohortQuery, queryParams } = parseFilters(

@@ -20,7 +20,7 @@ export interface RetentionProps {
 export function Retention({ websiteId, days = DAYS, startDate, endDate }: RetentionProps) {
   const { t, labels } = useMessages();
   const { locale } = useLocale();
-  const { data, error, isLoading } = useResultQuery('retention', {
+  const { data, error } = useResultQuery('retention', {
     websiteId,
     startDate,
     endDate,
@@ -47,7 +47,7 @@ export function Retention({ websiteId, days = DAYS, startDate, endDate }: Retent
     }, []) || [];
 
   return (
-    <LoadingPanel data={data} isLoading={isLoading} error={error}>
+    <LoadingPanel data={data} error={error}>
       {data && (
         <Panel allowFullscreen height="900px">
           <Column

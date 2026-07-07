@@ -1,8 +1,8 @@
-import { keepPreviousData } from '@tanstack/react-query';
-import type { ReactQueryOptions } from '@/lib/types';
+import type { LaneDataOptions } from '@/lib/types';
 import { useApi } from '../useApi';
 import { useDateParameters } from '../useDateParameters';
 import { useFilterParameters } from '../useFilterParameters';
+import { useLaneQuery } from '../useLaneQuery';
 
 export interface RevenueChartData {
   chart: { x: string; t: string; y: number; count: number }[];
@@ -11,14 +11,14 @@ export interface RevenueChartData {
 export function useRevenueChartQuery(
   websiteId: string,
   currency: string,
-  options?: ReactQueryOptions<RevenueChartData>,
+  options?: LaneDataOptions<RevenueChartData>,
 ) {
-  const { get, useQuery } = useApi();
+  const { get } = useApi();
   const { startAt, endAt, timezone, unit } = useDateParameters();
   const filters = useFilterParameters({ includePagination: false });
 
-  return useQuery<RevenueChartData>({
-    queryKey: [
+  return useLaneQuery<RevenueChartData>({
+    laneKey: [
       'websites:revenue:chart',
       {
         websiteId,
@@ -30,7 +30,7 @@ export function useRevenueChartQuery(
         ...filters,
       },
     ],
-    queryFn: async () =>
+    loader: async () =>
       get(`/websites/${websiteId}/revenue/chart`, {
         currency,
         startAt,
@@ -40,7 +40,6 @@ export function useRevenueChartQuery(
         ...filters,
       }),
     enabled: !!(websiteId && currency),
-    placeholderData: keepPreviousData,
     ...options,
   });
 }

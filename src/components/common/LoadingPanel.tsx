@@ -30,7 +30,7 @@ export function LoadingPanel({
   const empty = isEmpty ?? checkEmpty(data);
 
   // Show loading spinner only if no data exists
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return (
       <Column position="relative" height="100%" width="100%" {...props}>
         <Loading icon={loadingIcon} placement={loadingPlacement} />
@@ -39,18 +39,23 @@ export function LoadingPanel({
   }
 
   // Show error
-  if (error) {
+  if (error && empty) {
     return <ErrorMessage />;
   }
 
   // Show empty state (once loaded)
-  if (!error && !isLoading && !isFetching && empty) {
+  if (!error && !isLoading && empty) {
     return renderEmpty();
   }
 
   // Show main content when data exists
-  if (!isLoading && !isFetching && !error && !empty) {
-    return children;
+  if (!isLoading && !empty) {
+    return (
+      <>
+        {children}
+        {isFetching && <Loading icon={loadingIcon} placement={loadingPlacement} />}
+      </>
+    );
   }
 
   return null;

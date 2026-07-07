@@ -134,7 +134,6 @@ export function PropertyNumericChart({
     <Column gap="4">
       <LoadingPanel
         data={stats}
-        isLoading={sumQuery.isLoading || avgQuery.isLoading || statsQuery.isLoading}
         isFetching={sumQuery.isFetching || avgQuery.isFetching || statsQuery.isFetching}
         error={sumQuery.error || avgQuery.error || statsQuery.error}
         minHeight="100px"
@@ -163,11 +162,7 @@ export function PropertyNumericChart({
           />
         </MetricsBar>
       </LoadingPanel>
-      <LoadingPanel
-        isLoading={sumQuery.isLoading || avgQuery.isLoading || statsQuery.isLoading}
-        error={sumQuery.error || avgQuery.error || statsQuery.error}
-        minHeight="400px"
-      >
+      <LoadingPanel error={sumQuery.error || avgQuery.error || statsQuery.error} minHeight="400px">
         {chartData && (
           <BarChart
             chartData={chartData}
