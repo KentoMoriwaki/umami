@@ -1,4 +1,5 @@
 import { Column, Grid, Row } from '@umami/react-zen';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { useShare } from '@/components/hooks';
 import { ExportButton } from '@/components/input/ExportButton';
 import { FilterBar } from '@/components/input/FilterBar';
@@ -43,7 +44,11 @@ export function WebsiteControls({
           {allowMonthFilter && <MonthFilter />}
         </Row>
       </Grid>
-      {showFilter && <FilterBar websiteId={websiteId} />}
+      {showFilter && (
+        <DataSuspense fallback={<DataFallback minHeight="48px" />}>
+          <FilterBar websiteId={websiteId} />
+        </DataSuspense>
+      )}
     </Column>
   );
 }

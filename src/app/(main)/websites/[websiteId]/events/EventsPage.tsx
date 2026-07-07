@@ -20,11 +20,7 @@ import { EventsDataTable } from './EventsDataTable';
 const KEY_NAME = 'umami.events.tab';
 
 export function EventsPage({ websiteId }) {
-  return (
-    <DataSuspense>
-      <EventsPageContent websiteId={websiteId} />
-    </DataSuspense>
-  );
+  return <EventsPageContent websiteId={websiteId} />;
 }
 
 function EventsPageContent({ websiteId }) {

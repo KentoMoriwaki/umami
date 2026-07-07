@@ -7,6 +7,7 @@ import {
   Modal,
 } from '@umami/react-zen';
 import type { CSSProperties, ReactNode } from 'react';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { IconLabel } from '@/components/common/IconLabel';
 import { useMobile } from '@/components/hooks';
 
@@ -62,7 +63,11 @@ export function DialogButton({
       title={title === undefined ? label : title}
       style={style}
     >
-      {children}
+      {dialogProps => (
+        <DataSuspense fallback={<DataFallback minHeight="300px" />}>
+          {typeof children === 'function' ? children(dialogProps) : children}
+        </DataSuspense>
+      )}
     </Dialog>
   );
 

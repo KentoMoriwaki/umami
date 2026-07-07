@@ -17,6 +17,7 @@ import {
 } from '@umami/react-zen';
 import { endOfDay, subMonths } from 'date-fns';
 import type { Key } from 'react';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { Empty } from '@/components/common/Empty';
 import { FilterRecord } from '@/components/common/FilterRecord';
 import { type FieldGroup, useFields, useMessages, useMobile } from '@/components/hooks';
@@ -151,17 +152,21 @@ export function FieldFilters({
         )}
         {value.map((filter, index) => {
           return (
-            <FilterRecord
+            <DataSuspense
               key={`${filter.name}-${index}`}
-              websiteId={websiteId}
-              type={filter.name}
-              startDate={startDate}
-              endDate={endDate}
-              {...filter}
-              onSelect={(_name, operator) => handleSelect(index, operator)}
-              onRemove={() => handleRemove(index)}
-              onChange={(_name, val) => handleChange(index, val)}
-            />
+              fallback={<DataFallback minHeight="84px" />}
+            >
+              <FilterRecord
+                websiteId={websiteId}
+                type={filter.name}
+                startDate={startDate}
+                endDate={endDate}
+                {...filter}
+                onSelect={(_name, operator) => handleSelect(index, operator)}
+                onRemove={() => handleRemove(index)}
+                onChange={(_name, val) => handleChange(index, val)}
+              />
+            </DataSuspense>
           );
         })}
         {!value.length && <Empty message={t(messages.nothingSelected)} />}

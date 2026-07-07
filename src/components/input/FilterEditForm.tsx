@@ -1,5 +1,6 @@
 import { Button, Column, Row, Tab, TabList, TabPanel, Tabs } from '@umami/react-zen';
 import { useState } from 'react';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { useFilters, useMessages, useMobile, useNavigation } from '@/components/hooks';
 import { FieldFilters } from '@/components/input/FieldFilters';
 import { SegmentFilters } from '@/components/input/SegmentFilters';
@@ -107,19 +108,23 @@ export function FilterEditForm({ websiteId, onChange, onClose }: FilterEditFormP
           />
         </TabPanel>
         <TabPanel id="segments" style={panelStyle}>
-          <SegmentFilters
-            websiteId={websiteId}
-            segmentId={currentSegment}
-            onChange={handleSegmentChange}
-          />
+          <DataSuspense fallback={<DataFallback minHeight="300px" />}>
+            <SegmentFilters
+              websiteId={websiteId}
+              segmentId={currentSegment}
+              onChange={handleSegmentChange}
+            />
+          </DataSuspense>
         </TabPanel>
         <TabPanel id="cohorts" style={panelStyle}>
-          <SegmentFilters
-            type="cohort"
-            websiteId={websiteId}
-            segmentId={currentCohort}
-            onChange={handleSegmentChange}
-          />
+          <DataSuspense fallback={<DataFallback minHeight="300px" />}>
+            <SegmentFilters
+              type="cohort"
+              websiteId={websiteId}
+              segmentId={currentCohort}
+              onChange={handleSegmentChange}
+            />
+          </DataSuspense>
         </TabPanel>
       </Tabs>
       <Row

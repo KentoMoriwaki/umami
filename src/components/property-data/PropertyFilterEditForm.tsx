@@ -14,6 +14,7 @@ import {
 } from '@umami/react-zen';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { Empty } from '@/components/common/Empty';
 import { useMessages, useMobile, usePropertyFieldsQuery } from '@/components/hooks';
 import type { PropertyDataSource } from '@/components/hooks/queries/usePropertyFieldsQuery';
@@ -115,16 +116,22 @@ export function PropertyFilterEditForm({
           </Column>
           <Column overflow="auto" gapY="4" style={{ contain: 'layout' }}>
             {filters.map((filter, index) => (
-              <PropertyFilterRecord
+              <DataSuspense
                 key={`${filter.propertyName}-${index}`}
-                source={source}
-                websiteId={websiteId}
-                eventName={eventName}
-                filter={filter}
-                filters={filters}
-                onChange={f => setFilters(prev => prev.map((item, i) => (i === index ? f : item)))}
-                onRemove={() => setFilters(prev => prev.filter((_, i) => i !== index))}
-              />
+                fallback={<DataFallback minHeight="84px" />}
+              >
+                <PropertyFilterRecord
+                  source={source}
+                  websiteId={websiteId}
+                  eventName={eventName}
+                  filter={filter}
+                  filters={filters}
+                  onChange={f =>
+                    setFilters(prev => prev.map((item, i) => (i === index ? f : item)))
+                  }
+                  onRemove={() => setFilters(prev => prev.filter((_, i) => i !== index))}
+                />
+              </DataSuspense>
             ))}
             {!filters.length && <Empty message={t(messages.nothingSelected)} />}
           </Column>
