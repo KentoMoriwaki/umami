@@ -1,3 +1,4 @@
+import { useDeferredValue, useMemo } from 'react';
 import type { LaneDataOptions, PageResult } from '@/lib/types';
 import { type LaneQueryResult, useLaneQuery } from './useLaneQuery';
 import { useNavigation } from './useNavigation';
@@ -16,11 +17,18 @@ export function usePagedQuery<TData = any>({
   const {
     query: { page, search, orderBy, sortDescending },
   } = useNavigation();
-  const pageParams = { page, search, orderBy, sortDescending };
+  const pageParams = useMemo(
+    () => ({ page, search, orderBy, sortDescending }),
+    [orderBy, page, search, sortDescending],
+  );
+  const deferredPageParams = useDeferredValue(pageParams);
+  const isStale = deferredPageParams !== pageParams;
 
-  return useLaneQuery<PageResult<TData>, PageResult<TData>>({
-    laneKey: [...laneKey, pageParams] as const,
-    loader: ({ signal }) => Promise.resolve(loader(pageParams, { signal })),
+  const query = useLaneQuery<PageResult<TData>, PageResult<TData>>({
+    laneKey: [...laneKey, deferredPageParams] as const,
+    loader: ({ signal }) => Promise.resolve(loader(deferredPageParams, { signal })),
     ...options,
   });
+
+  return { ...query, isStale: query.isStale || isStale };
 }

@@ -75,7 +75,7 @@ export function Revenue({ websiteId, startDate, endDate, unit }: RevenueProps) {
         : null,
     [chartQuery.data, statsQuery.data],
   );
-  const error = chartQuery.error || statsQuery.error;
+  const refreshError = chartQuery.refreshError || statsQuery.refreshError;
   const isFetching = chartQuery.isFetching || statsQuery.isFetching;
 
   return (
@@ -83,7 +83,7 @@ export function Revenue({ websiteId, startDate, endDate, unit }: RevenueProps) {
       <Grid columns="280px" gap>
         <CurrencySelect value={currency} onChange={handleCurrencyChange} />
       </Grid>
-      <LoadingPanel data={data} isFetching={isFetching} error={error}>
+      <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError}>
         {data && (
           <Column gap>
             <RevenueMetricsBar data={data.total} currency={currency} />

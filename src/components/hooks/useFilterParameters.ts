@@ -5,10 +5,13 @@ import { useNavigation } from './useNavigation';
 
 export function useFilterParameters({
   includePagination = true,
+  deferred = true,
 }: {
   includePagination?: boolean;
+  deferred?: boolean;
 } = {}) {
-  const { query } = useNavigation();
+  const { query, deferredQuery } = useNavigation();
+  const queryParams = deferred ? deferredQuery : query;
   const share = useShare();
   const allowFilter = share?.parameters?.allowFilter !== false;
 
@@ -16,28 +19,28 @@ export function useFilterParameters({
     const filterParams: Record<string, any> = {};
 
     if (allowFilter) {
-      for (const key of Object.keys(query)) {
+      for (const key of Object.keys(queryParams)) {
         const baseName = key.replace(/\d+$/, '');
         if (FILTER_COLUMNS[baseName]) {
-          filterParams[key] = query[key];
+          filterParams[key] = queryParams[key];
         }
       }
     }
 
     const params = {
       ...filterParams,
-      search: query.search,
-      segment: allowFilter ? query.segment : undefined,
-      cohort: allowFilter ? query.cohort : undefined,
-      excludeBounce: allowFilter ? query.excludeBounce : undefined,
-      match: allowFilter ? query.match : undefined,
+      search: queryParams.search,
+      segment: allowFilter ? queryParams.segment : undefined,
+      cohort: allowFilter ? queryParams.cohort : undefined,
+      excludeBounce: allowFilter ? queryParams.excludeBounce : undefined,
+      match: allowFilter ? queryParams.match : undefined,
     } as Record<string, any>;
 
     if (includePagination) {
-      params.page = query.page;
-      params.pageSize = query.pageSize;
+      params.page = queryParams.page;
+      params.pageSize = queryParams.pageSize;
     }
 
     return params;
-  }, [allowFilter, includePagination, query]);
+  }, [allowFilter, includePagination, queryParams]);
 }

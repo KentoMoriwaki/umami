@@ -24,7 +24,7 @@ export function EventProperties({ websiteId }: { websiteId: string }) {
     setPropertyFilters([]);
   }, [eventName]);
 
-  const { data, isFetching, error } = useEventDataPropertiesQuery(websiteId);
+  const { data, isFetching, refreshError } = useEventDataPropertiesQuery(websiteId);
 
   const eventNames = useMemo<string[]>(() => {
     if (!data) return [];
@@ -59,7 +59,7 @@ export function EventProperties({ websiteId }: { websiteId: string }) {
   };
 
   return (
-    <LoadingPanel data={data} isFetching={isFetching} error={error} minHeight="300px">
+    <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError} minHeight="300px">
       <Column gap="6" minWidth="0">
         {data && (
           <Grid

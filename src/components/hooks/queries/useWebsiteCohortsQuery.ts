@@ -13,8 +13,8 @@ export function useWebsiteCohortsQuery(
 
   return useLaneQuery({
     laneKey: ['website:cohorts', { websiteId, ...filters, ...params }],
-    loader: () => {
-      return get(`/websites/${websiteId}/segments`, { ...filters, ...params });
+    loader: ({ signal }) => {
+      return get(`/websites/${websiteId}/segments`, { ...filters, ...params }, {}, { signal });
     },
     enabled: !!websiteId,
     ...options,

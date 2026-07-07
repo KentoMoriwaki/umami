@@ -10,8 +10,8 @@ export function useWebsiteSharesQuery(
 
   return usePagedQuery({
     laneKey: ['websiteShares', { websiteId }],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/shares`, pageParams);
+    loader: (pageParams, { signal }) => {
+      return get(`/websites/${websiteId}/shares`, pageParams, {}, { signal });
     },
     ...options,
   });

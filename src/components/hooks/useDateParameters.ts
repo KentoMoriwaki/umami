@@ -12,7 +12,7 @@ function safeToISOString(date: Date, fallback: Date): string {
 export function useDateParameters() {
   const {
     dateRange: { startDate, endDate, unit },
-  } = useDateRange();
+  } = useDateRange({ deferred: true });
   const { timezone, localToUtc, canonicalizeTimezone } = useTimezone();
 
   const utcStart = localToUtc(startDate);

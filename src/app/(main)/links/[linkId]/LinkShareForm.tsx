@@ -8,12 +8,12 @@ import { SimpleShareCreateForm } from '@/components/share/SimpleShareCreateForm'
 import { SimpleSharesTable } from '@/components/share/SimpleSharesTable';
 
 export function LinkShareForm({ linkId }: { linkId: string }) {
-  const { data, error } = useLinkSharesQuery({ linkId });
+  const { data, refreshError } = useLinkSharesQuery({ linkId });
   const shares = data?.data || [];
   const hasShares = shares.length > 0;
 
   return (
-    <LoadingPanel data={data} error={error}>
+    <LoadingPanel data={data} refreshError={refreshError}>
       <LinkShareFormContent linkId={linkId} hasShares={hasShares} shares={shares} />
     </LoadingPanel>
   );

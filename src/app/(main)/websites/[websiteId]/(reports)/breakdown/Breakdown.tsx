@@ -14,7 +14,7 @@ export function Breakdown({ websiteId, selectedFields = [], startDate, endDate }
   const { t, labels } = useMessages();
   const { formatValue } = useFormat();
   const { fields } = useFields();
-  const { data, error } = useResultQuery<any>(
+  const { data, refreshError } = useResultQuery<any>(
     'breakdown',
     {
       websiteId,
@@ -26,7 +26,7 @@ export function Breakdown({ websiteId, selectedFields = [], startDate, endDate }
   );
 
   return (
-    <LoadingPanel data={data} error={error}>
+    <LoadingPanel data={data} refreshError={refreshError}>
       <Column overflow="auto" minHeight="0" height="100%">
         <DataTable data={data} style={{ tableLayout: 'fixed' }}>
           {selectedFields.map(field => {

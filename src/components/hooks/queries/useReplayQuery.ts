@@ -17,8 +17,13 @@ export function useReplayQuery(
 
   return useLaneQuery({
     laneKey: ['replay', { websiteId, replayId, until, chunkIndex, eventIndex }],
-    loader: () => {
-      return get(`/websites/${websiteId}/replays/${replayId}`, { until, chunkIndex, eventIndex });
+    loader: ({ signal }) => {
+      return get(
+        `/websites/${websiteId}/replays/${replayId}`,
+        { until, chunkIndex, eventIndex },
+        {},
+        { signal },
+      );
     },
     enabled: Boolean(websiteId && replayId),
   });

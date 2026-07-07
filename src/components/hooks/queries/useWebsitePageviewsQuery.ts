@@ -22,15 +22,20 @@ export function useWebsitePageviewsQuery(
       'websites:pageviews',
       { websiteId, compare, startAt, endAt, unit, timezone, ...queryParams },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/pageviews`, {
-        compare,
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...queryParams,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/pageviews`,
+        {
+          compare,
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...queryParams,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

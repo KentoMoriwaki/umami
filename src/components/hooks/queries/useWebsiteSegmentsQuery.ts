@@ -13,7 +13,8 @@ export function useWebsiteSegmentsQuery(
 
   return useLaneQuery({
     laneKey: ['website:segments', { websiteId, ...filters, ...params }],
-    loader: () => get(`/websites/${websiteId}/segments`, { ...filters, ...params }),
+    loader: ({ signal }) =>
+      get(`/websites/${websiteId}/segments`, { ...filters, ...params }, {}, { signal }),
     enabled: !!websiteId,
     ...options,
   });

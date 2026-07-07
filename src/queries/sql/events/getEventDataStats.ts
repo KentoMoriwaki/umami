@@ -14,7 +14,7 @@ export async function getEventDataStats(
 }> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   }).then(results => results?.[0]);
 }
 
@@ -53,7 +53,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters) {
   );
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   filters: QueryFilters,
 ): Promise<{ events: number; properties: number; records: number }[]> {

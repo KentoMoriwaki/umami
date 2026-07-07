@@ -33,7 +33,7 @@ export function MetricsTable({
 }: MetricsTableProps) {
   const { updateParams } = useNavigation();
   const { t, labels } = useMessages();
-  const { data, isFetching, error } = useWebsiteMetricsQuery(websiteId, {
+  const { data, isFetching, refreshError } = useWebsiteMetricsQuery(websiteId, {
     type,
     limit,
     ...params,
@@ -71,7 +71,7 @@ export function MetricsTable({
   };
 
   return (
-    <LoadingPanel data={data} isFetching={isFetching} error={error} minHeight="400px">
+    <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError} minHeight="400px">
       <Grid padding="2">
         {data && <ListTable {...props} data={filteredData} renderLabel={renderLabel} />}
         {showMore && limit && (

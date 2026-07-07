@@ -40,7 +40,7 @@ export async function saveHeatmapEvents(rows: HeatmapEventRow[]) {
 
   return runQuery({
     [PRISMA]: () => relationalQuery(normalizedRows),
-    [CLICKHOUSE]: () => clickhouseSql(normalizedRows),
+    [CLICKHOUSE]: () => clickhouseQuery(normalizedRows),
   });
 }
 
@@ -79,7 +79,7 @@ async function relationalQuery(rows: HeatmapEventRow[]) {
   });
 }
 
-async function clickhouseSql(rows: HeatmapEventRow[]) {
+async function clickhouseQuery(rows: HeatmapEventRow[]) {
   const { insert, getUTCString } = clickhouse;
   const { sendMessage } = kafka;
 

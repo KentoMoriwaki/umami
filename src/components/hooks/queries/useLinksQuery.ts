@@ -11,11 +11,16 @@ export function useLinksQuery(
 
   return usePagedQuery({
     laneKey: ['links', { teamId, ...params }],
-    loader: pageParams => {
-      return get(teamId ? `/teams/${teamId}/links` : '/links', {
-        ...pageParams,
-        ...params,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        teamId ? `/teams/${teamId}/links` : '/links',
+        {
+          ...pageParams,
+          ...params,
+        },
+        {},
+        { signal },
+      );
     },
     ...options,
   });

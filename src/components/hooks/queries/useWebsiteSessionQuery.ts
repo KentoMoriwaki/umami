@@ -6,8 +6,8 @@ export function useWebsiteSessionQuery(websiteId: string, sessionId: string | un
 
   return useLaneQuery({
     laneKey: ['session', { websiteId, sessionId }],
-    loader: () => {
-      return get(`/websites/${websiteId}/sessions/${sessionId}`);
+    loader: ({ signal }) => {
+      return get(`/websites/${websiteId}/sessions/${sessionId}`, {}, {}, { signal });
     },
     enabled: Boolean(websiteId && sessionId),
   });

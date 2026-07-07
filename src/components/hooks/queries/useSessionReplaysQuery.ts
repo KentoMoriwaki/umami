@@ -8,14 +8,19 @@ export function useSessionReplaysQuery(websiteId: string, sessionId: string) {
 
   return usePagedQuery({
     laneKey: ['session-replays', { websiteId, sessionId, startAt, endAt, unit, timezone }],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/sessions/${sessionId}/replays`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...pageParams,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/websites/${websiteId}/sessions/${sessionId}/replays`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...pageParams,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

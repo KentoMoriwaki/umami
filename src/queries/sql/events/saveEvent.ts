@@ -66,7 +66,7 @@ export interface SaveEventArgs {
 export async function saveEvent(args: SaveEventArgs) {
   return runQuery({
     [PRISMA]: () => relationalQuery(args),
-    [CLICKHOUSE]: () => clickhouseSql(args),
+    [CLICKHOUSE]: () => clickhouseQuery(args),
   });
 }
 
@@ -168,7 +168,7 @@ async function relationalQuery({
   }
 }
 
-async function clickhouseSql({
+async function clickhouseQuery({
   websiteId,
   sessionId,
   visitId,

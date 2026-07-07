@@ -7,7 +7,7 @@ export function useBoardQuery(boardId: string, options?: LaneDataOptions) {
 
   return useLaneQuery({
     laneKey: ['boards', { boardId }],
-    loader: () => get(`/boards/${boardId}`),
+    loader: ({ signal }) => get(`/boards/${boardId}`, {}, {}, { signal }),
     enabled: !!boardId && boardId !== 'create',
     ...options,
   });

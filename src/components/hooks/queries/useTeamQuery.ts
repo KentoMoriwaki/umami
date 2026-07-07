@@ -7,7 +7,7 @@ export function useTeamQuery(teamId: string, options?: LaneDataOptions) {
 
   return useLaneQuery({
     laneKey: ['teams', { teamId }],
-    loader: () => get(`/teams/${teamId}`),
+    loader: ({ signal }) => get(`/teams/${teamId}`, {}, {}, { signal }),
     enabled: !!teamId,
     ...options,
   });

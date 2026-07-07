@@ -6,8 +6,8 @@ export function useReportQuery(reportId: string) {
 
   return useLaneQuery({
     laneKey: ['report', { reportId }],
-    loader: () => {
-      return get(`/reports/${reportId}`);
+    loader: ({ signal }) => {
+      return get(`/reports/${reportId}`, {}, {}, { signal });
     },
     enabled: !!reportId,
   });

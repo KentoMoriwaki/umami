@@ -51,13 +51,18 @@ export function useWebsiteValuesQuery({
 
   return useLaneQuery({
     laneKey: ['websites:values', { websiteId, type, startDate, endDate, search }],
-    loader: () =>
-      get(`/websites/${websiteId}/values`, {
-        type,
-        startAt: +startDate,
-        endAt: +endDate,
-        search: getSearch(type, search),
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/values`,
+        {
+          type,
+          startAt: +startDate,
+          endAt: +endDate,
+          search: getSearch(type, search),
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && type && startDate && endDate),
   });
 }

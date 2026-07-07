@@ -1,5 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useState, useTransition } from 'react';
 import { buildPath } from '@/lib/url';
 
 export function useNavigation() {
@@ -7,12 +7,16 @@ export function useNavigation() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [, startNavigationTransition] = useTransition();
+  const searchParamsKey = searchParams.toString();
   const [, teamId] = pathname.match(/\/teams\/([a-f0-9-]+)/) || [];
   const [, websiteId] = pathname.match(/\/websites\/([a-f0-9-]+)/) || [];
   const [, linkId] = pathname.match(/\/links\/([a-f0-9-]+)/) || [];
   const [, pixelId] = pathname.match(/\/pixels\/([a-f0-9-]+)/) || [];
   const [, boardId] = pathname.match(/\/boards\/([a-f0-9-]+)/) || [];
-  const [queryParams, setQueryParams] = useState(Object.fromEntries(searchParams));
+  const nextQueryParams = useMemo(() => Object.fromEntries(searchParams), [searchParamsKey]);
+  const [queryParams, setQueryParams] = useState(nextQueryParams);
+  const deferredQueryParams = useDeferredValue(queryParams);
+  const isQueryStale = deferredQueryParams !== queryParams;
 
   const updateParams = useCallback(
     (params?: Record<string, string | number>) => {
@@ -39,8 +43,10 @@ export function useNavigation() {
   );
 
   useEffect(() => {
-    setQueryParams(Object.fromEntries(searchParams));
-  }, [searchParams.toString()]);
+    startNavigationTransition(() => {
+      setQueryParams(nextQueryParams);
+    });
+  }, [nextQueryParams, startNavigationTransition]);
 
   const router = useMemo(
     () => ({
@@ -64,6 +70,8 @@ export function useNavigation() {
     pathname,
     searchParams,
     query: queryParams,
+    deferredQuery: deferredQueryParams,
+    isQueryStale,
     teamId,
     websiteId,
     linkId,

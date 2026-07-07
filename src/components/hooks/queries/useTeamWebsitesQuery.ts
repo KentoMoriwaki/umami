@@ -6,8 +6,8 @@ export function useTeamWebsitesQuery(teamId: string) {
 
   return usePagedQuery({
     laneKey: ['teams:websites', { teamId }],
-    loader: (params: any) => {
-      return get(`/teams/${teamId}/websites`, params);
+    loader: (params: any, { signal }) => {
+      return get(`/teams/${teamId}/websites`, params, {}, { signal });
     },
   });
 }

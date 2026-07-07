@@ -6,7 +6,7 @@ export function useActiveUsersQuery(websiteId: string, options?: LaneDataOptions
   const { get } = useApi();
   return useLaneQuery<any>({
     laneKey: ['websites:active', websiteId],
-    loader: () => get(`/websites/${websiteId}/active`),
+    loader: ({ signal }) => get(`/websites/${websiteId}/active`, {}, {}, { signal }),
     enabled: !!websiteId,
     ...options,
   });

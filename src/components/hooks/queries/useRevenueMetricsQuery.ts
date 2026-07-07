@@ -32,13 +32,18 @@ export function useRevenueMetricsQuery(
         ...params,
       },
     ],
-    loader: async () =>
-      get(`/websites/${websiteId}/revenue/metrics`, {
-        startAt,
-        endAt,
-        ...filters,
-        ...params,
-      }),
+    loader: async ({ signal }) =>
+      get(
+        `/websites/${websiteId}/revenue/metrics`,
+        {
+          startAt,
+          endAt,
+          ...filters,
+          ...params,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && params.currency && params.type),
     ...options,
   });

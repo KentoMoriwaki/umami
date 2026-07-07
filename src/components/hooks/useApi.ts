@@ -12,23 +12,6 @@ import {
 } from '@/lib/fetch';
 import { useApp } from '@/store/app';
 
-let activeRequestSignal: AbortSignal | undefined;
-
-export async function withRequestSignal<T>(signal: AbortSignal, callback: () => Promise<T> | T) {
-  const previousSignal = activeRequestSignal;
-  activeRequestSignal = signal;
-
-  try {
-    return await callback();
-  } finally {
-    activeRequestSignal = previousSignal;
-  }
-}
-
-function getRequestOptions(options: RequestOptions = {}) {
-  return { ...options, signal: options.signal ?? activeRequestSignal };
-}
-
 async function handleResponse(res: FetchResponse): Promise<any> {
   if (!res.ok) {
     const { message, code, status } = res?.data?.error || {};
@@ -65,9 +48,7 @@ export function useApi() {
         headers: object = {},
         options: RequestOptions = {},
       ) => {
-        return httpGet(getUrl(url), params, getHeaders(headers), getRequestOptions(options)).then(
-          handleResponse,
-        );
+        return httpGet(getUrl(url), params, getHeaders(headers), options).then(handleResponse);
       },
       [httpGet],
     ),
@@ -79,9 +60,7 @@ export function useApi() {
         headers: object = {},
         options: RequestOptions = {},
       ) => {
-        return httpPost(getUrl(url), params, getHeaders(headers), getRequestOptions(options)).then(
-          handleResponse,
-        );
+        return httpPost(getUrl(url), params, getHeaders(headers), options).then(handleResponse);
       },
       [httpPost],
     ),
@@ -93,9 +72,7 @@ export function useApi() {
         headers: object = {},
         options: RequestOptions = {},
       ) => {
-        return httpPut(getUrl(url), params, getHeaders(headers), getRequestOptions(options)).then(
-          handleResponse,
-        );
+        return httpPut(getUrl(url), params, getHeaders(headers), options).then(handleResponse);
       },
       [httpPut],
     ),
@@ -107,12 +84,7 @@ export function useApi() {
         headers: object = {},
         options: RequestOptions = {},
       ) => {
-        return httpDelete(
-          getUrl(url),
-          params,
-          getHeaders(headers),
-          getRequestOptions(options),
-        ).then(handleResponse);
+        return httpDelete(getUrl(url), params, getHeaders(headers), options).then(handleResponse);
       },
       [httpDelete],
     ),

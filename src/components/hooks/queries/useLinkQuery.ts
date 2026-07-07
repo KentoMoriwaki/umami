@@ -6,8 +6,8 @@ export function useLinkQuery(linkId?: string) {
 
   return useLaneQuery({
     laneKey: ['link', { linkId }],
-    loader: () => {
-      return get(`/links/${linkId}`);
+    loader: ({ signal }) => {
+      return get(`/links/${linkId}`, {}, {}, { signal });
     },
     enabled: !!linkId,
   });

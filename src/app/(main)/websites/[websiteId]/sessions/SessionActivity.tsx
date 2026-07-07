@@ -30,7 +30,7 @@ export function SessionActivity({
 }) {
   const { t, labels } = useMessages();
   const { formatTimezoneDate } = useTimezone();
-  const { data, error } = useSessionActivityQuery(websiteId, sessionId, startDate, endDate);
+  const { data, refreshError } = useSessionActivityQuery(websiteId, sessionId, startDate, endDate);
   const { isMobile } = useMobile();
   let lastDay = null;
 
@@ -48,7 +48,7 @@ export function SessionActivity({
   };
 
   return (
-    <LoadingPanel data={data} error={error}>
+    <LoadingPanel data={data} refreshError={refreshError}>
       <Column gap>
         {data?.map(({ eventId, createdAt, urlPath, eventName, visitId, hostname, hasData }) => {
           const showHeader = !lastDay || !isSameDay(new Date(lastDay), new Date(createdAt));

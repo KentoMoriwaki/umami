@@ -11,11 +11,16 @@ export function usePixelsQuery(
 
   return usePagedQuery({
     laneKey: ['pixels', { teamId, ...params }],
-    loader: pageParams => {
-      return get(teamId ? `/teams/${teamId}/pixels` : '/pixels', {
-        ...pageParams,
-        ...params,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        teamId ? `/teams/${teamId}/pixels` : '/pixels',
+        {
+          ...pageParams,
+          ...params,
+        },
+        {},
+        { signal },
+      );
     },
     ...options,
   });

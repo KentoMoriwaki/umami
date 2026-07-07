@@ -31,12 +31,17 @@ export function useEventStatsQuery(
 
   return useLaneQuery<EventStatsApiResponse, EventStatsData>({
     laneKey: ['websites:events:stats', { websiteId, startAt, endAt, ...filters }],
-    loader: () =>
-      get(`/websites/${websiteId}/events/stats`, {
-        startAt,
-        endAt,
-        ...filters,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/events/stats`,
+        {
+          startAt,
+          endAt,
+          ...filters,
+        },
+        {},
+        { signal },
+      ),
     select: response => response.data,
     enabled: !!websiteId,
     ...options,

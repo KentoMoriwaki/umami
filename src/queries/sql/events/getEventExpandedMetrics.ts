@@ -26,7 +26,7 @@ export async function getEventExpandedMetrics(
 ): Promise<EventExpandedMetricData[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -83,7 +83,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   parameters: EventExpandedMetricParameters,
   filters: QueryFilters,

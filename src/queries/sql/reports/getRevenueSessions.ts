@@ -11,7 +11,7 @@ export async function getRevenueSessions(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -89,7 +89,7 @@ async function relationalQuery(websiteId: string, currency: string, filters: Que
   );
 }
 
-async function clickhouseSql(websiteId: string, currency: string, filters: QueryFilters) {
+async function clickhouseQuery(websiteId: string, currency: string, filters: QueryFilters) {
   const { pagedRawQuery, parseFilters, getDateStringSQL } = clickhouse;
   const { search } = filters;
   const { filterQuery, dateQuery, cohortQuery, queryParams } = parseFilters({

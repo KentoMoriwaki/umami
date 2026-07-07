@@ -29,13 +29,18 @@ export function useWebsiteMetricsQuery(
         ...params,
       },
     ],
-    loader: async () =>
-      get(`/websites/${websiteId}/metrics`, {
-        startAt,
-        endAt,
-        ...filters,
-        ...params,
-      }),
+    loader: async ({ signal }) =>
+      get(
+        `/websites/${websiteId}/metrics`,
+        {
+          startAt,
+          endAt,
+          ...filters,
+          ...params,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

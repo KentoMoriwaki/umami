@@ -52,7 +52,7 @@ export function DataGrid({
   children,
 }: DataGridProps) {
   const { t, labels } = useMessages();
-  const { data, error, isFetching } = query;
+  const { data, refreshError, isFetching, isStale } = query;
   const { router, updateParams, query: queryParams } = useNavigation();
   const [isRoutePending, startRouteTransition] = useTransition();
   const [search, setSearch] = useState(queryParams?.search || data?.search || '');
@@ -138,8 +138,8 @@ export function DataGrid({
       </Row>
       <LoadingPanel
         data={data?.data}
-        isFetching={(isFetching || isRoutePending) && !data}
-        error={error}
+        isFetching={isFetching || isRoutePending || isStale}
+        refreshError={refreshError}
         renderEmpty={renderEmpty}
       >
         {data && (

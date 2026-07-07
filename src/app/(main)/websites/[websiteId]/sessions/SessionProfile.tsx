@@ -31,11 +31,16 @@ export function SessionProfile({
   showReplays?: boolean;
   onClose?: () => void;
 }) {
-  const { data, error } = useWebsiteSessionQuery(websiteId, sessionId);
+  const { data, refreshError } = useWebsiteSessionQuery(websiteId, sessionId);
   const { t, labels } = useMessages();
 
   return (
-    <LoadingPanel data={data} error={error} loadingIcon="spinner" loadingPlacement="absolute">
+    <LoadingPanel
+      data={data}
+      refreshError={refreshError}
+      loadingIcon="spinner"
+      loadingPlacement="absolute"
+    >
       {data && (
         <Column gap>
           {onClose && (

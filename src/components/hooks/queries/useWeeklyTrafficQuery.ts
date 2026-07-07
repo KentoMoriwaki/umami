@@ -10,14 +10,19 @@ export function useWeeklyTrafficQuery(websiteId: string, params?: Record<string,
 
   return useLaneQuery({
     laneKey: ['sessions', { websiteId, startAt, endAt, timezone, ...params, ...filters }],
-    loader: () => {
-      return get(`/websites/${websiteId}/sessions/weekly`, {
-        startAt,
-        endAt,
-        timezone,
-        ...params,
-        ...filters,
-      });
+    loader: ({ signal }) => {
+      return get(
+        `/websites/${websiteId}/sessions/weekly`,
+        {
+          startAt,
+          endAt,
+          timezone,
+          ...params,
+          ...filters,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

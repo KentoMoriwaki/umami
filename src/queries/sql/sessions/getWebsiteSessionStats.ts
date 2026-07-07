@@ -19,7 +19,7 @@ export async function getWebsiteSessionStats(
 ): Promise<WebsiteSessionStatsData[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -55,7 +55,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   filters: QueryFilters,
 ): Promise<WebsiteSessionStatsData[]> {

@@ -21,17 +21,22 @@ export function useEventDataPivotQuery(
       'websites:event-data-pivot',
       { websiteId, eventName, eventFilters, startAt, endAt, unit, timezone, ...params },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/event-data-pivot`, {
-        eventName,
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...serializeEventPropertyFilters(eventFilters),
-        ...params,
-        maxResults: MAX_PAGING_RESULTS,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/event-data-pivot`,
+        {
+          eventName,
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...serializeEventPropertyFilters(eventFilters),
+          ...params,
+          maxResults: MAX_PAGING_RESULTS,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && eventName),
     ...options,
   });

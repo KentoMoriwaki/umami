@@ -12,7 +12,7 @@ export function useDateRangeQuery(websiteId: string, options?: LaneDataOptions) 
 
   const { data } = useLaneQuery<DateRange>({
     laneKey: ['date-range', websiteId],
-    loader: () => get(`/websites/${websiteId}/daterange`),
+    loader: ({ signal }) => get(`/websites/${websiteId}/daterange`, {}, {}, { signal }),
     enabled: !!websiteId,
     ...options,
   });

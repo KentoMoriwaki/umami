@@ -11,7 +11,7 @@ export function useWebsiteCohortQuery(
 
   return useLaneQuery({
     laneKey: ['website:cohorts', { websiteId, cohortId }],
-    loader: () => get(`/websites/${websiteId}/segments/${cohortId}`),
+    loader: ({ signal }) => get(`/websites/${websiteId}/segments/${cohortId}`, {}, {}, { signal }),
     enabled: !!(websiteId && cohortId),
     ...options,
   });

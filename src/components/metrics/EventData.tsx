@@ -3,10 +3,10 @@ import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { useEventDataQuery } from '@/components/hooks';
 
 export function EventData({ websiteId, eventId }: { websiteId: string; eventId: string }) {
-  const { data, error } = useEventDataQuery(websiteId, eventId);
+  const { data, refreshError } = useEventDataQuery(websiteId, eventId);
 
   return (
-    <LoadingPanel error={error}>
+    <LoadingPanel refreshError={refreshError}>
       <Grid columns="1fr 1fr" gap="5">
         {data?.map(({ dataKey, stringValue }) => {
           return (

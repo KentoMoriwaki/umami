@@ -11,11 +11,16 @@ export function useBoardsQuery(
 
   return usePagedQuery({
     laneKey: ['boards', { teamId, ...params }],
-    loader: pageParams => {
-      return get(teamId ? `/teams/${teamId}/boards` : '/boards', {
-        ...pageParams,
-        ...params,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        teamId ? `/teams/${teamId}/boards` : '/boards',
+        {
+          ...pageParams,
+          ...params,
+        },
+        {},
+        { signal },
+      );
     },
     ...options,
   });

@@ -3,7 +3,7 @@ import { useNavigation } from './useNavigation';
 
 export function usePageParameters() {
   const {
-    query: { page, pageSize, search, orderBy, sortDescending },
+    deferredQuery: { page, pageSize, search, orderBy, sortDescending },
   } = useNavigation();
 
   return useMemo(() => {

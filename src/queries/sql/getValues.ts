@@ -15,7 +15,7 @@ export async function getValues(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -84,7 +84,7 @@ async function relationalQuery(websiteId: string, column: string, filters: Query
   );
 }
 
-async function clickhouseSql(websiteId: string, column: string, filters: QueryFilters) {
+async function clickhouseQuery(websiteId: string, column: string, filters: QueryFilters) {
   const { rawQuery, getSearchSQL } = clickhouse;
   const params = {};
   const { startDate, endDate, search } = filters;

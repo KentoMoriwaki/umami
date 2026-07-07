@@ -33,7 +33,7 @@ export function usePropertyArraySeriesQuery(
         ...params,
       },
     ],
-    loader: () =>
+    loader: ({ signal }) =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data-pivot/array-series`
@@ -48,6 +48,8 @@ export function usePropertyArraySeriesQuery(
           ...serializePropertyFilters(propertyFilters),
           ...params,
         },
+        {},
+        { signal },
       ),
     enabled: !!(websiteId && propertyName && (source === 'session' || eventName)),
     ...options,

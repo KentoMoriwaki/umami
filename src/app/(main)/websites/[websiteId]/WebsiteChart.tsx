@@ -14,7 +14,7 @@ export function WebsiteChart({
   const { timezone } = useTimezone();
   const { dateRange, dateCompare } = useDateRange({ timezone: timezone });
   const { startDate, endDate, unit, value } = dateRange;
-  const { data, isFetching, error } = useWebsitePageviewsQuery({
+  const { data, isFetching, refreshError } = useWebsitePageviewsQuery({
     websiteId,
     compare: compareMode ? dateCompare?.compare : undefined,
   });
@@ -46,7 +46,7 @@ export function WebsiteChart({
   }, [data, startDate, endDate, unit]);
 
   return (
-    <LoadingPanel data={data} isFetching={isFetching} error={error}>
+    <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError}>
       <PageviewsChart
         key={value}
         data={chartData}

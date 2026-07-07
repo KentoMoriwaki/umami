@@ -6,8 +6,8 @@ export function useUserTeamsQuery(userId: string) {
 
   return usePagedQuery({
     laneKey: ['teams', { userId }],
-    loader: params => {
-      return get(`/users/${userId}/teams`, params);
+    loader: (params, { signal }) => {
+      return get(`/users/${userId}/teams`, params, {}, { signal });
     },
     enabled: !!userId,
   });

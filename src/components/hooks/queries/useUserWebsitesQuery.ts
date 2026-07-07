@@ -11,7 +11,7 @@ export function useUserWebsitesQuery(
 
   return usePagedQuery({
     laneKey: ['websites', { userId, teamId, ...params }],
-    loader: pageParams => {
+    loader: (pageParams, { signal }) => {
       return get(
         teamId
           ? `/teams/${teamId}/websites`
@@ -22,6 +22,8 @@ export function useUserWebsitesQuery(
           ...pageParams,
           ...params,
         },
+        {},
+        { signal },
       );
     },
     ...options,

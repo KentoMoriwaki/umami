@@ -6,8 +6,8 @@ export function usePixelQuery(pixelId?: string) {
 
   return useLaneQuery({
     laneKey: ['pixel', { pixelId }],
-    loader: () => {
-      return get(`/pixels/${pixelId}`);
+    loader: ({ signal }) => {
+      return get(`/pixels/${pixelId}`, {}, {}, { signal });
     },
     enabled: !!pixelId,
   });

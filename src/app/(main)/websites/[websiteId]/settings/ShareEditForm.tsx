@@ -34,7 +34,6 @@ export function ShareEditForm({
   const { cloudMode } = useConfig();
   const { get, post } = useApi();
   const { touch } = useModified();
-  const { modified } = useModified('shares');
   const [share, setShare] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(!!shareId);
   const [isPending, setIsPending] = useState(false);
@@ -59,7 +58,7 @@ export function ShareEditForm({
       }
     };
     loadShare();
-  }, [shareId, modified]);
+  }, [get, shareId]);
 
   const handleSubmit = async (data: any) => {
     const parameters: Record<string, boolean | string | undefined> = {};

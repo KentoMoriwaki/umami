@@ -6,10 +6,15 @@ export function useUsersQuery() {
 
   return usePagedQuery({
     laneKey: ['users:admin', {}],
-    loader: (pageParams: any) => {
-      return get('/admin/users', {
-        ...pageParams,
-      });
+    loader: (pageParams: any, { signal }) => {
+      return get(
+        '/admin/users',
+        {
+          ...pageParams,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

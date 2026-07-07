@@ -16,7 +16,7 @@ export async function getSessionDataDateSeries(
 ): Promise<EventDataDateSeriesPoint[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -65,7 +65,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   propertyName: string,
   filters: QueryFilters,

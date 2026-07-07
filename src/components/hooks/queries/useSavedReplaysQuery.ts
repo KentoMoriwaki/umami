@@ -6,10 +6,15 @@ export function useSavedReplaysQuery(websiteId: string) {
 
   return usePagedQuery({
     laneKey: ['replays:saved', { websiteId }],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/replays/saved`, {
-        ...pageParams,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/websites/${websiteId}/replays/saved`,
+        {
+          ...pageParams,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

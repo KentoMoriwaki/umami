@@ -3,7 +3,7 @@ import { Column, Tab, TabList, TabPanel, Tabs } from '@umami/react-zen';
 import { type Key, useState } from 'react';
 import { SessionModal } from '@/app/(main)/websites/[websiteId]/sessions/SessionModal';
 import { WebsiteControls } from '@/app/(main)/websites/[websiteId]/WebsiteControls';
-import { DataSuspense } from '@/components/common/DataSuspense';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { Panel } from '@/components/common/Panel';
 import { useDateRange, useMessages } from '@/components/hooks';
@@ -29,70 +29,19 @@ export function EventsPage({ websiteId }) {
 
 function EventsPageContent({ websiteId }) {
   const [tab, setTab] = useState(getItem(KEY_NAME) || 'chart');
-  const { isAllTime } = useDateRange();
-  const { t, labels, getErrorMessage } = useMessages();
-  const { data, isFetching, error } = useEventStatsQuery({
-    websiteId,
-  });
-  const errorMessage = error
-    ? getErrorMessage(error instanceof Error ? error : new Error(String(error)))
-    : undefined;
+  const { t, labels } = useMessages();
 
   const handleSelect = (value: Key) => {
     setItem(KEY_NAME, value);
     setTab(value);
   };
 
-  const { events, visitors, visits, uniqueEvents, comparison } = data || {};
-
-  const metrics = data
-    ? [
-        {
-          value: visitors,
-          label: t(labels.visitors),
-          change: visitors - comparison.visitors,
-          formatValue: formatLongNumber,
-        },
-        {
-          value: visits,
-          label: t(labels.visits),
-          change: visits - comparison.visits,
-          formatValue: formatLongNumber,
-        },
-        {
-          value: events,
-          label: t(labels.events),
-          change: events - comparison.events,
-          formatValue: formatLongNumber,
-        },
-        {
-          value: uniqueEvents,
-          label: t(labels.uniqueEvents),
-          change: uniqueEvents - comparison.uniqueEvents,
-          formatValue: formatLongNumber,
-        },
-      ]
-    : null;
-
   return (
     <Column gap="3">
       <WebsiteControls websiteId={websiteId} />
-      <LoadingPanel data={metrics} isFetching={isFetching} error={errorMessage} minHeight="136px">
-        <MetricsBar>
-          {metrics?.map(({ label, value, change, formatValue }) => {
-            return (
-              <MetricCard
-                key={label}
-                value={value}
-                label={label}
-                change={change}
-                formatValue={formatValue}
-                showChange={!isAllTime}
-              />
-            );
-          })}
-        </MetricsBar>
-      </LoadingPanel>
+      <DataSuspense fallback={<DataFallback minHeight="136px" />}>
+        <EventsMetricsSummary websiteId={websiteId} />
+      </DataSuspense>
       <Panel minWidth="0" width="100%" style={{ overflow: 'hidden' }}>
         <Tabs
           selectedKey={tab}
@@ -128,5 +77,67 @@ function EventsPageContent({ websiteId }) {
       </Panel>
       <SessionModal websiteId={websiteId} />
     </Column>
+  );
+}
+
+function EventsMetricsSummary({ websiteId }) {
+  const { isAllTime } = useDateRange();
+  const { t, labels } = useMessages();
+  const { data, isFetching, refreshError } = useEventStatsQuery({
+    websiteId,
+  });
+  const { events, visitors, visits, uniqueEvents, comparison } = data || {};
+
+  const metrics = data
+    ? [
+        {
+          value: visitors,
+          label: t(labels.visitors),
+          change: visitors - comparison.visitors,
+          formatValue: formatLongNumber,
+        },
+        {
+          value: visits,
+          label: t(labels.visits),
+          change: visits - comparison.visits,
+          formatValue: formatLongNumber,
+        },
+        {
+          value: events,
+          label: t(labels.events),
+          change: events - comparison.events,
+          formatValue: formatLongNumber,
+        },
+        {
+          value: uniqueEvents,
+          label: t(labels.uniqueEvents),
+          change: uniqueEvents - comparison.uniqueEvents,
+          formatValue: formatLongNumber,
+        },
+      ]
+    : null;
+
+  return (
+    <LoadingPanel
+      data={metrics}
+      isFetching={isFetching}
+      refreshError={refreshError}
+      minHeight="136px"
+    >
+      <MetricsBar>
+        {metrics?.map(({ label, value, change, formatValue }) => {
+          return (
+            <MetricCard
+              key={label}
+              value={value}
+              label={label}
+              change={change}
+              formatValue={formatValue}
+              showChange={!isAllTime}
+            />
+          );
+        })}
+      </MetricsBar>
+    </LoadingPanel>
   );
 }

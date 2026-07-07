@@ -63,7 +63,7 @@ export function Performance({ websiteId, startDate, endDate, unit }: Performance
   const { t, labels } = useMessages();
   const { locale, dateLocale } = useLocale();
 
-  const { data, error } = useResultQuery<any>('performance', {
+  const { data, refreshError } = useResultQuery<any>('performance', {
     websiteId,
     startDate,
     endDate,
@@ -158,7 +158,7 @@ export function Performance({ websiteId, startDate, endDate, unit }: Performance
           ))}
         </Select>
       </Grid>
-      <LoadingPanel data={data} error={error}>
+      <LoadingPanel data={data} refreshError={refreshError}>
         {data && (
           <Column gap>
             <Grid columns={{ base: '1fr 1fr', lg: 'repeat(5, 1fr)' }} gap>

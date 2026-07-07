@@ -37,7 +37,7 @@ export function SessionPropertyChart({
   );
 
   return (
-    <LoadingPanel error={statsQuery.error} minHeight="300px">
+    <LoadingPanel refreshError={statsQuery.refreshError} minHeight="300px">
       <Column gap="6">
         <Column minHeight="320px">
           {chartData.length ? (

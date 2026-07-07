@@ -33,13 +33,18 @@ export function useWebsiteExpandedMetricsQuery(
         ...params,
       },
     ],
-    loader: async () =>
-      get(`/websites/${websiteId}/metrics/expanded`, {
-        startAt,
-        endAt,
-        ...filters,
-        ...params,
-      }),
+    loader: async ({ signal }) =>
+      get(
+        `/websites/${websiteId}/metrics/expanded`,
+        {
+          startAt,
+          endAt,
+          ...filters,
+          ...params,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

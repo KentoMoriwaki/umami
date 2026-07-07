@@ -11,11 +11,16 @@ export function useSessionActivityQuery(
 
   return useLaneQuery({
     laneKey: ['session:activity', { websiteId, sessionId, startDate, endDate }],
-    loader: () => {
-      return get(`/websites/${websiteId}/sessions/${sessionId}/activity`, {
-        startAt: +new Date(startDate),
-        endAt: +new Date(endDate),
-      });
+    loader: ({ signal }) => {
+      return get(
+        `/websites/${websiteId}/sessions/${sessionId}/activity`,
+        {
+          startAt: +new Date(startDate),
+          endAt: +new Date(endDate),
+        },
+        {},
+        { signal },
+      );
     },
     enabled: Boolean(websiteId && sessionId && startDate && endDate),
   });

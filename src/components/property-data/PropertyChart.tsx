@@ -57,7 +57,7 @@ export function PropertyChart({
     eventName,
     { enabled: seriesType === 'array' },
   );
-  const { data, isFetching, error } =
+  const { data, isFetching, refreshError } =
     seriesType === 'array' ? arraySeriesQuery : propertySeriesQuery;
 
   const aggregated = useMemo(() => {
@@ -160,7 +160,7 @@ export function PropertyChart({
 
   return (
     <Column gap="6">
-      <LoadingPanel error={error} minHeight="400px">
+      <LoadingPanel refreshError={refreshError} minHeight="400px">
         {chartData && (
           <BarChart
             chartData={chartData}
@@ -173,7 +173,12 @@ export function PropertyChart({
           />
         )}
       </LoadingPanel>
-      <LoadingPanel data={tableData} isFetching={isFetching} error={error} minHeight="300px">
+      <LoadingPanel
+        data={tableData}
+        isFetching={isFetching}
+        refreshError={refreshError}
+        minHeight="300px"
+      >
         <Grid columns={{ base: '1fr', md: '1fr 1fr' }} gap padding="2" alignItems="start">
           <ListTable title={propertyName} metric={t(labels.count)} data={tableData} />
           {pieChartData && <PieChart type="doughnut" chartData={pieChartData} />}

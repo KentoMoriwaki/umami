@@ -7,7 +7,7 @@ import { PixelPanels } from '@/app/(main)/pixels/[pixelId]/PixelPanels';
 import { PixelProvider } from '@/app/(main)/pixels/PixelProvider';
 import { ExpandedViewModal } from '@/app/(main)/websites/[websiteId]/ExpandedViewModal';
 import { WebsiteChart } from '@/app/(main)/websites/[websiteId]/WebsiteChart';
-import { DataSuspense } from '@/components/common/DataSuspense';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { Panel } from '@/components/common/Panel';
 
@@ -28,7 +28,9 @@ export function PixelPage({
             <PageBody gap>
               <PixelHeader showActions={showHeaderActions} />
               <PixelControls pixelId={pixelId} />
-              <PixelMetricsBar pixelId={pixelId} showChange={true} />
+              <DataSuspense fallback={<DataFallback minHeight="136px" />}>
+                <PixelMetricsBar pixelId={pixelId} showChange={true} />
+              </DataSuspense>
               <Panel>
                 <WebsiteChart websiteId={pixelId} />
               </Panel>

@@ -7,11 +7,16 @@ export function useWebsitesQuery(params?: Record<string, any>, options?: LaneDat
 
   return usePagedQuery({
     laneKey: ['websites:admin', { ...params }],
-    loader: pageParams => {
-      return get(`/admin/websites`, {
-        ...pageParams,
-        ...params,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/admin/websites`,
+        {
+          ...pageParams,
+          ...params,
+        },
+        {},
+        { signal },
+      );
     },
     ...options,
   });

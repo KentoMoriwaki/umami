@@ -9,9 +9,9 @@ export function useShareTokenQuery(slug: string) {
   const shareToken = useApp(state => state.shareToken?.token);
   const query = useLaneQuery<any | null>({
     laneKey: ['share', slug],
-    loader: async () => {
+    loader: async ({ signal }) => {
       try {
-        return await get(`/share/${slug}`);
+        return await get(`/share/${slug}`, {}, {}, { signal });
       } catch {
         return null;
       }

@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo } from 'react';
+import { use, useEffect } from 'react';
 import {
   type LaneLoader,
   type LaneRead,
@@ -6,7 +6,6 @@ import {
   useLane,
   useLaneInstance,
 } from 'use-lane';
-import { withRequestSignal } from './useApi';
 
 export type LaneQueryOptions<TData = any, TSelected = TData> = LaneUseOptions & {
   enabled?: boolean;
@@ -16,9 +15,9 @@ export type LaneQueryOptions<TData = any, TSelected = TData> = LaneUseOptions & 
 
 export type LaneQueryResult<TData, TSelected = TData> = {
   data: TSelected | undefined;
-  error: unknown;
   refreshError: unknown;
   isFetching: boolean;
+  isStale: boolean;
   isPending: boolean;
   isBackgroundPending: boolean;
   isTransitionPending: boolean;
@@ -38,13 +37,7 @@ export function useLaneQuery<TData = any, TSelected = TData>({
   loader: LaneLoader<TData>;
 }): LaneQueryResult<TData, TSelected> {
   const lane = useLaneInstance();
-  const laneKeyId = JSON.stringify(laneKey);
-  const stableLaneKey = useMemo(() => laneKey, [laneKeyId]);
-  const result = useLane<TData>(
-    stableLaneKey,
-    enabled ? context => withRequestSignal(context.signal, () => loader(context)) : undefined,
-    options,
-  );
+  const result = useLane<TData>(laneKey, enabled ? loader : undefined, options);
   const read = result.promise ? use(result.promise) : undefined;
   const data = read
     ? select
@@ -59,17 +52,17 @@ export function useLaneQuery<TData = any, TSelected = TData>({
     }
 
     const timer = setInterval(() => {
-      lane.invalidate(stableLaneKey, { background: true, onlyIf: 'settled' });
+      lane.invalidate(laneKey, { background: true, onlyIf: 'settled' });
     }, refetchInterval);
 
     return () => clearInterval(timer);
-  }, [enabled, lane, stableLaneKey, refetchInterval]);
+  }, [enabled, lane, laneKey, refetchInterval]);
 
   return {
     data,
-    error: read?.refreshError,
     refreshError: read?.refreshError,
     isFetching: isPending,
+    isStale: false,
     isPending,
     isBackgroundPending: result.isBackgroundPending,
     isTransitionPending: result.isTransitionPending,

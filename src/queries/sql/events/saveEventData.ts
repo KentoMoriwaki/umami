@@ -21,7 +21,7 @@ export interface SaveEventDataArgs {
 export async function saveEventData(data: SaveEventDataArgs) {
   return runQuery({
     [PRISMA]: () => relationalQuery(data),
-    [CLICKHOUSE]: () => clickhouseSql(data),
+    [CLICKHOUSE]: () => clickhouseQuery(data),
   });
 }
 
@@ -48,7 +48,7 @@ async function relationalQuery(data: SaveEventDataArgs) {
   });
 }
 
-async function clickhouseSql(data: SaveEventDataArgs) {
+async function clickhouseQuery(data: SaveEventDataArgs) {
   const { websiteId, sessionId, eventId, urlPath, eventName, eventData, createdAt } = data;
 
   const { insert, getUTCString } = clickhouse;

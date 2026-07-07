@@ -7,7 +7,7 @@ export function useUserQuery(userId: string, options?: LaneDataOptions) {
 
   return useLaneQuery({
     laneKey: ['users', { userId }],
-    loader: () => get(`/users/${userId}`),
+    loader: ({ signal }) => get(`/users/${userId}`, {}, {}, { signal }),
     enabled: !!userId,
     ...options,
   });

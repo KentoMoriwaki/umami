@@ -14,14 +14,19 @@ export function useEventDataPropertiesQuery(websiteId: string, options?: LaneDat
       'websites:event-data:properties',
       { websiteId, startAt, endAt, unit, timezone, ...filters },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/event-data/properties`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/event-data/properties`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

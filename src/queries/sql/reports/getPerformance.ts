@@ -28,7 +28,7 @@ export async function getPerformance(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -126,7 +126,7 @@ async function relationalQuery(
   return { chart, summary };
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   parameters: PerformanceParameters,
   filters: QueryFilters,

@@ -21,7 +21,7 @@ export function SessionProperties({ websiteId }: { websiteId: string }) {
   const [propertyName, setPropertyName] = useState('');
   const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>([]);
   const { t, labels } = useMessages();
-  const { data, isFetching, error } = usePropertyFieldsQuery('session', websiteId);
+  const { data, isFetching, refreshError } = usePropertyFieldsQuery('session', websiteId);
   const { data: scopedData } = useSessionDataPropertiesQuery(
     websiteId,
     propertyName ? { propertyName, propertyFilters } : undefined,
@@ -59,7 +59,7 @@ export function SessionProperties({ websiteId }: { websiteId: string }) {
   );
 
   return (
-    <LoadingPanel isFetching={isFetching} data={data} error={error} minHeight="300px">
+    <LoadingPanel isFetching={isFetching} data={data} refreshError={refreshError} minHeight="300px">
       <Column gap="6" minWidth="0">
         {data && (
           <Grid

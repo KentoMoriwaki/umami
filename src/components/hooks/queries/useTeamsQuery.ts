@@ -7,11 +7,16 @@ export function useTeamsQuery(params?: Record<string, any>, options?: LaneDataOp
 
   return usePagedQuery({
     laneKey: ['teams:admin', { ...params }],
-    loader: pageParams => {
-      return get(`/admin/teams`, {
-        ...pageParams,
-        ...params,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/admin/teams`,
+        {
+          ...pageParams,
+          ...params,
+        },
+        {},
+        { signal },
+      );
     },
     ...options,
   });

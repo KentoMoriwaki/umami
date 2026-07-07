@@ -18,7 +18,7 @@ export function FunnelsPage({ websiteId }: { websiteId: string }) {
 }
 
 function FunnelsPageContent({ websiteId }: { websiteId: string }) {
-  const { data, error } = useReportsQuery({ websiteId, type: 'funnel' });
+  const { data, refreshError } = useReportsQuery({ websiteId, type: 'funnel' });
   const {
     dateRange: { startDate, endDate },
   } = useDateRange();
@@ -33,7 +33,7 @@ function FunnelsPageContent({ websiteId }: { websiteId: string }) {
           <FunnelAddButton websiteId={websiteId} />
         </SectionHeader>
       )}
-      <LoadingPanel data={data} error={error}>
+      <LoadingPanel data={data} refreshError={refreshError}>
         {data && (
           <Grid gap>
             {data.data?.map((report: any) => (

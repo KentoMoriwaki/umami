@@ -11,17 +11,22 @@ export function useReplaysQuery(websiteId: string, params?: Record<string, strin
 
   return usePagedQuery({
     laneKey: ['replays', { websiteId, startAt, endAt, unit, timezone, ...filters, ...params }],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/replays`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-        ...pageParams,
-        ...params,
-        maxResults: MAX_PAGING_RESULTS,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/websites/${websiteId}/replays`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+          ...pageParams,
+          ...params,
+          maxResults: MAX_PAGING_RESULTS,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

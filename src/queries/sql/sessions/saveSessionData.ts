@@ -19,7 +19,7 @@ export interface SaveSessionDataArgs {
 export async function saveSessionData(data: SaveSessionDataArgs) {
   return runQuery({
     [PRISMA]: () => relationalQuery(data),
-    [CLICKHOUSE]: () => clickhouseSql(data),
+    [CLICKHOUSE]: () => clickhouseQuery(data),
   });
 }
 
@@ -70,7 +70,7 @@ export async function relationalQuery({
   }
 }
 
-async function clickhouseSql({
+async function clickhouseQuery({
   websiteId,
   sessionId,
   sessionData,

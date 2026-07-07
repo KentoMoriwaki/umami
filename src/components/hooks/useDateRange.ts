@@ -5,10 +5,12 @@ import { DATE_RANGE_CONFIG, DEFAULT_DATE_RANGE_VALUE } from '@/lib/constants';
 import { getCompareDate, getOffsetDateRange, parseDateRange } from '@/lib/date';
 import { getItem } from '@/lib/storage';
 
-export function useDateRange(options: { ignoreOffset?: boolean; timezone?: string } = {}) {
-  const {
-    query: { date = '', unit = '', offset = 0, compare = 'prev' },
-  } = useNavigation();
+export function useDateRange(
+  options: { ignoreOffset?: boolean; timezone?: string; deferred?: boolean } = {},
+) {
+  const { query, deferredQuery } = useNavigation();
+  const queryParams = options.deferred ? deferredQuery : query;
+  const { date = '', unit = '', offset = 0, compare = 'prev' } = queryParams;
   const { locale } = useLocale();
   const dateRange = useMemo(() => {
     const dateRangeObject = parseDateRange(
@@ -21,7 +23,7 @@ export function useDateRange(options: { ignoreOffset?: boolean; timezone?: strin
     return !options.ignoreOffset && offset
       ? getOffsetDateRange(dateRangeObject, +offset)
       : dateRangeObject;
-  }, [date, unit, offset, options]);
+  }, [date, unit, offset, options.ignoreOffset, options.timezone]);
 
   const dateCompare = getCompareDate(compare, dateRange.startDate, dateRange.endDate);
 

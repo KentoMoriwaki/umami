@@ -14,7 +14,7 @@ export function PixelMetricsBar({
 }) {
   const { isAllTime } = useDateRange();
   const { t, labels } = useMessages();
-  const { data, isFetching, error } = useWebsiteStatsQuery({ websiteId: pixelId });
+  const { data, isFetching, refreshError } = useWebsiteStatsQuery({ websiteId: pixelId });
 
   const { pageviews, visitors, visits, comparison } = data || {};
 
@@ -42,7 +42,12 @@ export function PixelMetricsBar({
     : null;
 
   return (
-    <LoadingPanel data={metrics} isFetching={isFetching} error={error} minHeight="136px">
+    <LoadingPanel
+      data={metrics}
+      isFetching={isFetching}
+      refreshError={refreshError}
+      minHeight="136px"
+    >
       <MetricsBar>
         {metrics?.map(({ label, value, prev, change, formatValue, reverseColors }: any) => {
           return (

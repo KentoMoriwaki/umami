@@ -7,8 +7,8 @@ export function useRealtimeQuery(websiteId: string) {
   const { get } = useApi();
   return useLaneQuery<RealtimeData>({
     laneKey: ['realtime', { websiteId }],
-    loader: async () => {
-      return get(`/realtime/${websiteId}`);
+    loader: async ({ signal }) => {
+      return get(`/realtime/${websiteId}`, {}, {}, { signal });
     },
     enabled: !!websiteId,
     refetchInterval: REALTIME_INTERVAL,

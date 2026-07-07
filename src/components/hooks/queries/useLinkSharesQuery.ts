@@ -7,8 +7,8 @@ export function useLinkSharesQuery({ linkId }: { linkId: string }, options?: Lan
 
   return usePagedQuery({
     laneKey: ['linkShares', { linkId }],
-    loader: pageParams => {
-      return get(`/links/${linkId}/shares`, pageParams);
+    loader: (pageParams, { signal }) => {
+      return get(`/links/${linkId}/shares`, pageParams, {}, { signal });
     },
     ...options,
   });

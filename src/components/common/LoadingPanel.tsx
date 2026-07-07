@@ -1,14 +1,16 @@
-import { Column, type ColumnProps, Loading } from '@umami/react-zen';
+import { Column, type ColumnProps, Icon, Loading, Row, Text } from '@umami/react-zen';
 import type { ReactNode } from 'react';
 import { Empty } from '@/components/common/Empty';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
+import { useMessages } from '@/components/hooks';
+import { AlertTriangle } from '@/components/icons';
 
 export interface LoadingPanelProps extends ColumnProps {
   data?: any;
   error?: unknown;
   isEmpty?: boolean;
-  isLoading?: boolean;
   isFetching?: boolean;
+  refreshError?: unknown;
   loadingIcon?: 'dots' | 'spinner';
   loadingPlacement?: 'center' | 'absolute' | 'inline';
   renderEmpty?: () => ReactNode;
@@ -19,8 +21,8 @@ export function LoadingPanel({
   data,
   error,
   isEmpty,
-  isLoading,
   isFetching,
+  refreshError,
   loadingIcon = 'dots',
   loadingPlacement = 'absolute',
   renderEmpty = () => <Empty />,
@@ -29,36 +31,38 @@ export function LoadingPanel({
 }: LoadingPanelProps): ReactNode {
   const empty = isEmpty ?? checkEmpty(data);
 
-  // Show loading spinner only if no data exists
-  if (isLoading) {
-    return (
-      <Column position="relative" height="100%" width="100%" {...props}>
-        <Loading icon={loadingIcon} placement={loadingPlacement} />
-      </Column>
-    );
-  }
-
-  // Show error
   if (error && empty) {
     return <ErrorMessage />;
   }
 
-  // Show empty state (once loaded)
-  if (!error && !isLoading && empty) {
+  if (!error && empty) {
     return renderEmpty();
   }
 
-  // Show main content when data exists
-  if (!isLoading && !empty) {
+  if (!empty) {
     return (
-      <>
+      <Column position="relative" width="100%" {...props}>
         {children}
+        {refreshError && <RefreshErrorHint error={refreshError} />}
         {isFetching && <Loading icon={loadingIcon} placement={loadingPlacement} />}
-      </>
+      </Column>
     );
   }
 
   return null;
+}
+
+function RefreshErrorHint({ error }: { error: unknown }) {
+  const { getErrorMessage } = useMessages();
+
+  return (
+    <Row alignItems="center" gap="2" marginTop="2">
+      <Icon>
+        <AlertTriangle />
+      </Icon>
+      <Text>{getErrorMessage(error instanceof Error ? error : new Error(String(error)))}</Text>
+    </Row>
+  );
 }
 
 function checkEmpty(data: any) {

@@ -7,7 +7,7 @@ export function useDashboardQuery(options?: LaneDataOptions) {
 
   return useLaneQuery({
     laneKey: ['dashboard', {}],
-    loader: () => get('/dashboard'),
+    loader: ({ signal }) => get('/dashboard', {}, {}, { signal }),
     ...options,
   });
 }

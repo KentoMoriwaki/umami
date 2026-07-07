@@ -7,7 +7,7 @@ import { LinkPanels } from '@/app/(main)/links/[linkId]/LinkPanels';
 import { LinkProvider } from '@/app/(main)/links/LinkProvider';
 import { ExpandedViewModal } from '@/app/(main)/websites/[websiteId]/ExpandedViewModal';
 import { WebsiteChart } from '@/app/(main)/websites/[websiteId]/WebsiteChart';
-import { DataSuspense } from '@/components/common/DataSuspense';
+import { DataFallback, DataSuspense } from '@/components/common/DataSuspense';
 import { PageBody } from '@/components/common/PageBody';
 import { Panel } from '@/components/common/Panel';
 
@@ -28,7 +28,9 @@ export function LinkPage({
             <PageBody gap>
               <LinkHeader showActions={showHeaderActions} />
               <LinkControls linkId={linkId} />
-              <LinkMetricsBar linkId={linkId} showChange={true} />
+              <DataSuspense fallback={<DataFallback minHeight="136px" />}>
+                <LinkMetricsBar linkId={linkId} showChange={true} />
+              </DataSuspense>
               <Panel>
                 <WebsiteChart websiteId={linkId} />
               </Panel>

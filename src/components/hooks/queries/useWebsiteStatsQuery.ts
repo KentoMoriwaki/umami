@@ -29,7 +29,8 @@ export function useWebsiteStatsQuery(
 
   return useLaneQuery<WebsiteStatsData>({
     laneKey: ['websites:stats', { websiteId, compare, startAt, endAt, ...filters }],
-    loader: () => get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }),
+    loader: ({ signal }) =>
+      get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }, {}, { signal }),
     enabled: !!websiteId,
     ...options,
   });

@@ -26,7 +26,7 @@ export function RevenueMetricsTable({
   enabled,
 }: RevenueMetricsTableProps) {
   const { t, labels } = useMessages();
-  const { data, isFetching, error } = useRevenueMetricsQuery(
+  const { data, isFetching, refreshError } = useRevenueMetricsQuery(
     websiteId,
     { type, currency },
     { enabled },
@@ -46,7 +46,7 @@ export function RevenueMetricsTable({
   );
 
   return (
-    <LoadingPanel data={data} isFetching={isFetching} error={error} minHeight="400px">
+    <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError} minHeight="400px">
       <Grid padding="2">
         {data && (
           <ListTable

@@ -10,7 +10,7 @@ export function useReportsQuery(
 
   return usePagedQuery({
     laneKey: ['reports', { websiteId, type }],
-    loader: async () => get('/reports', { websiteId, type }),
+    loader: async (_params, { signal }) => get('/reports', { websiteId, type }, {}, { signal }),
     enabled: !!websiteId && !!type,
     ...options,
   });

@@ -13,8 +13,8 @@ import { UpdateNotice } from './UpdateNotice';
 export function App({ children }) {
   const { user, error } = useLoginQuery();
   const config = useConfig();
-  const { pathname, router, teamId } = useNavigation();
-  const { error: teamError } = useTeamQuery(teamId);
+  const { pathname, teamId } = useNavigation();
+  useTeamQuery(teamId);
 
   useEffect(() => {
     if (teamId) {
@@ -23,13 +23,6 @@ export function App({ children }) {
       removeItem(LAST_TEAM_CONFIG);
     }
   }, [teamId]);
-
-  useEffect(() => {
-    if (teamId && teamError) {
-      removeItem(LAST_TEAM_CONFIG);
-      router.replace('/');
-    }
-  }, [teamId, teamError, router]);
 
   if (!config) {
     return <Loading placement="absolute" />;
@@ -43,10 +36,6 @@ export function App({ children }) {
   }
 
   if (!user || !config) {
-    return null;
-  }
-
-  if (teamId && teamError) {
     return null;
   }
 

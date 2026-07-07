@@ -7,7 +7,7 @@ export function useWebsiteQuery(websiteId?: string, options?: LaneDataOptions) {
 
   return useLaneQuery({
     laneKey: ['website', { websiteId }],
-    loader: () => get(`/websites/${websiteId}`),
+    loader: ({ signal }) => get(`/websites/${websiteId}`, {}, {}, { signal }),
     enabled: !!websiteId,
     ...options,
   });

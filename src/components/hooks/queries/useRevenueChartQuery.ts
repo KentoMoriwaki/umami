@@ -30,15 +30,20 @@ export function useRevenueChartQuery(
         ...filters,
       },
     ],
-    loader: async () =>
-      get(`/websites/${websiteId}/revenue/chart`, {
-        currency,
-        startAt,
-        endAt,
-        timezone,
-        unit,
-        ...filters,
-      }),
+    loader: async ({ signal }) =>
+      get(
+        `/websites/${websiteId}/revenue/chart`,
+        {
+          currency,
+          startAt,
+          endAt,
+          timezone,
+          unit,
+          ...filters,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && currency),
     ...options,
   });

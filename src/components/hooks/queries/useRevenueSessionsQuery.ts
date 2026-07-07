@@ -18,18 +18,23 @@ export function useRevenueSessionsQuery(
       'revenue-sessions',
       { websiteId, currency, startAt, endAt, unit, timezone, ...params, ...filters },
     ],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/revenue/sessions`, {
-        currency,
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-        ...pageParams,
-        ...params,
-        maxResults: MAX_PAGING_RESULTS,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/websites/${websiteId}/revenue/sessions`,
+        {
+          currency,
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+          ...pageParams,
+          ...params,
+          maxResults: MAX_PAGING_RESULTS,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

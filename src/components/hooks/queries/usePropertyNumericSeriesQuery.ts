@@ -35,7 +35,7 @@ export function usePropertyNumericSeriesQuery(
         ...params,
       },
     ],
-    loader: () =>
+    loader: ({ signal }) =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data-pivot/numeric-series`
@@ -51,6 +51,8 @@ export function usePropertyNumericSeriesQuery(
           ...serializePropertyFilters(propertyFilters),
           ...params,
         },
+        {},
+        { signal },
       ),
     enabled: !!(websiteId && propertyName && (source === 'session' || eventName)),
     ...options,

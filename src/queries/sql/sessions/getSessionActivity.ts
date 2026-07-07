@@ -11,7 +11,7 @@ export async function getSessionActivity(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -48,7 +48,7 @@ async function relationalQuery(websiteId: string, sessionId: string, filters: Qu
   );
 }
 
-async function clickhouseSql(websiteId: string, sessionId: string, filters: QueryFilters) {
+async function clickhouseQuery(websiteId: string, sessionId: string, filters: QueryFilters) {
   const { rawQuery } = clickhouse;
   const { startDate, endDate } = filters;
 

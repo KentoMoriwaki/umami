@@ -18,7 +18,7 @@ export function GoalsPage({ websiteId }: { websiteId: string }) {
 }
 
 function GoalsPageContent({ websiteId }: { websiteId: string }) {
-  const { data, error } = useReportsQuery({ websiteId, type: 'goal' });
+  const { data, refreshError } = useReportsQuery({ websiteId, type: 'goal' });
   const {
     dateRange: { startDate, endDate },
   } = useDateRange();
@@ -33,7 +33,7 @@ function GoalsPageContent({ websiteId }: { websiteId: string }) {
           <GoalAddButton websiteId={websiteId} />
         </SectionHeader>
       )}
-      <LoadingPanel data={data} error={error}>
+      <LoadingPanel data={data} refreshError={refreshError}>
         {data && (
           <Grid columns={{ base: '1fr', md: '1fr 1fr' }} gap>
             {data.data.map((report: any) => (

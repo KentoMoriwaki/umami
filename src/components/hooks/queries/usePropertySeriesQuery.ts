@@ -33,7 +33,7 @@ export function usePropertySeriesQuery(
         ...params,
       },
     ],
-    loader: () =>
+    loader: ({ signal }) =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data-pivot/property-series`
@@ -48,6 +48,8 @@ export function usePropertySeriesQuery(
           ...serializePropertyFilters(propertyFilters),
           ...params,
         },
+        {},
+        { signal },
       ),
     enabled: !!(websiteId && propertyName && (source === 'session' || eventName)),
     ...options,

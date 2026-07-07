@@ -35,7 +35,7 @@ export function usePropertyValuesQuery(
         ...params,
       },
     ],
-    loader: () =>
+    loader: ({ signal }) =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data/values`
@@ -51,6 +51,8 @@ export function usePropertyValuesQuery(
           ...serializePropertyFilters(propertyFilters),
           ...params,
         },
+        {},
+        { signal },
       ),
     enabled: !!(websiteId && propertyName && (source === 'session' || eventName)),
     ...options,

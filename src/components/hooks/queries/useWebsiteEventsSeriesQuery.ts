@@ -18,15 +18,20 @@ export function useWebsiteEventsSeriesQuery(
       'websites:events:series',
       { websiteId, startAt, endAt, unit, timezone, ...filters, ...params },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/events/series`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-        ...params,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/events/series`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+          ...params,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

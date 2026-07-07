@@ -14,14 +14,19 @@ export function useEventDataQuery(websiteId: string, eventId: string, options?: 
       'websites:event-data',
       { websiteId, eventId, startAt, endAt, unit, timezone, ...params },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/event-data/${eventId}`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...params,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/event-data/${eventId}`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...params,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && eventId),
     ...options,
   });

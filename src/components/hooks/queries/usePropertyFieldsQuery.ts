@@ -21,7 +21,7 @@ export function usePropertyFieldsQuery(
       `websites:${source}-data:fields`,
       { websiteId, eventName, startAt, endAt, unit, timezone, ...params },
     ],
-    loader: () =>
+    loader: ({ signal }) =>
       get(
         source === 'event'
           ? `/websites/${websiteId}/event-data/fields`
@@ -34,6 +34,8 @@ export function usePropertyFieldsQuery(
           timezone,
           ...params,
         },
+        {},
+        { signal },
       ),
     enabled: !!(websiteId && (source === 'session' || eventName)),
     ...options,

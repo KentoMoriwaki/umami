@@ -10,7 +10,7 @@ export async function getEventDataById(
 ): Promise<EventData[]> {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -39,7 +39,7 @@ async function relationalQuery(websiteId: string, eventId: string) {
   );
 }
 
-async function clickhouseSql(websiteId: string, eventId: string): Promise<EventData[]> {
+async function clickhouseQuery(websiteId: string, eventId: string): Promise<EventData[]> {
   const { rawQuery } = clickhouse;
 
   return rawQuery(

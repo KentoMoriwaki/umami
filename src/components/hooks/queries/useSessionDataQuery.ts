@@ -6,8 +6,13 @@ export function useSessionDataQuery(websiteId: string, sessionId: string) {
 
   return useLaneQuery({
     laneKey: ['session:data', { websiteId, sessionId }],
-    loader: () => {
-      return get(`/websites/${websiteId}/sessions/${sessionId}/properties`, { websiteId });
+    loader: ({ signal }) => {
+      return get(
+        `/websites/${websiteId}/sessions/${sessionId}/properties`,
+        { websiteId },
+        {},
+        { signal },
+      );
     },
   });
 }

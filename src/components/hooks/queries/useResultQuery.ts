@@ -28,19 +28,24 @@ export function useResultQuery<T = any>(
         ...filters,
       },
     ],
-    loader: () =>
-      post(`/reports/${type}`, {
-        websiteId,
-        type,
-        filters,
-        parameters: {
-          startDate,
-          endDate,
-          timezone,
-          unit,
-          ...parameters,
+    loader: ({ signal }) =>
+      post(
+        `/reports/${type}`,
+        {
+          websiteId,
+          type,
+          filters,
+          parameters: {
+            startDate,
+            endDate,
+            timezone,
+            unit,
+            ...parameters,
+          },
         },
-      }),
+        {},
+        { signal },
+      ),
     enabled: !!type,
     ...options,
   });

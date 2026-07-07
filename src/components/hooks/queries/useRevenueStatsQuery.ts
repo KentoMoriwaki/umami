@@ -40,14 +40,19 @@ export function useRevenueStatsQuery(
       'websites:revenue:stats',
       { websiteId, currency, compare, startAt, endAt, ...filters },
     ],
-    loader: () =>
-      get(`/websites/${websiteId}/revenue/stats`, {
-        currency,
-        compare,
-        startAt,
-        endAt,
-        ...filters,
-      }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/revenue/stats`,
+        {
+          currency,
+          compare,
+          startAt,
+          endAt,
+          ...filters,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!(websiteId && currency),
     ...options,
   });

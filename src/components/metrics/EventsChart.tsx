@@ -25,7 +25,7 @@ export function EventsChart({ websiteId, focusLabel, limit }: EventsChartProps) 
     dateRange: { startDate, endDate, unit },
   } = useDateRange({ timezone: timezone });
   const { locale, dateLocale } = useLocale();
-  const { data, error } = useWebsiteEventsSeriesQuery(websiteId, { limit });
+  const { data, refreshError } = useWebsiteEventsSeriesQuery(websiteId, { limit });
   const [label, setLabel] = useState<string>(focusLabel);
   const [hiddenLabels, setHiddenLabels] = useState<Set<string>>(() => new Set());
 
@@ -108,7 +108,7 @@ export function EventsChart({ websiteId, focusLabel, limit }: EventsChartProps) 
   const renderXLabel = useCallback(renderDateLabels(unit, locale), [unit, locale]);
 
   return (
-    <LoadingPanel error={error} minHeight="400px">
+    <LoadingPanel refreshError={refreshError} minHeight="400px">
       {chartData && (
         <BarChart
           chartData={chartData}

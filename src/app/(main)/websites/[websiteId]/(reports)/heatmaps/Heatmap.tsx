@@ -53,7 +53,7 @@ interface HeatmapProps {
 }
 
 export function Heatmap({ websiteId, urlPath, onUrlPathChange, mode, search }: HeatmapProps) {
-  const { data: pagesData, error } = useResultQuery<HeatmapResult>('heatmap', {
+  const { data: pagesData, refreshError } = useResultQuery<HeatmapResult>('heatmap', {
     websiteId,
     mode,
   });
@@ -102,14 +102,14 @@ export function Heatmap({ websiteId, urlPath, onUrlPathChange, mode, search }: H
 
   if (pages.length === 0) {
     return (
-      <LoadingPanel data={pagesData} error={error} minHeight="900px">
+      <LoadingPanel data={pagesData} refreshError={refreshError} minHeight="900px">
         <EmptyState message="No data available." />
       </LoadingPanel>
     );
   }
 
   return (
-    <LoadingPanel data={pagesData} error={error} minHeight="900px">
+    <LoadingPanel data={pagesData} refreshError={refreshError} minHeight="900px">
       <Grid columns="320px 12px 1fr" minHeight="900px" className={styles.layoutGrid}>
         <PageList
           pages={filteredPages}

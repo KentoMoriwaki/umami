@@ -11,7 +11,7 @@ export async function getSessionDataValues(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -84,7 +84,7 @@ async function relationalQuery(
   );
 }
 
-async function clickhouseSql(
+async function clickhouseQuery(
   websiteId: string,
   filters: QueryFilters & { propertyName?: string; dataType?: number },
 ): Promise<{ propertyName: string; dataType: number; propertyValue: string; total: number }[]> {

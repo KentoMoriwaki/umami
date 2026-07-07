@@ -11,7 +11,7 @@ export function useWebsiteSegmentQuery(
 
   return useLaneQuery({
     laneKey: ['website:segments', { websiteId, segmentId }],
-    loader: () => get(`/websites/${websiteId}/segments/${segmentId}`),
+    loader: ({ signal }) => get(`/websites/${websiteId}/segments/${segmentId}`, {}, {}, { signal }),
     enabled: !!(websiteId && segmentId),
     ...options,
   });

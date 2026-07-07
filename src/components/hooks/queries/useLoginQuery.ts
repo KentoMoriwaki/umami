@@ -10,9 +10,9 @@ export function useLoginQuery() {
 
   const query = useLaneQuery<{ user?: any; error?: unknown }>({
     laneKey: ['login'],
-    loader: async () => {
+    loader: async ({ signal }) => {
       try {
-        const data = await post('/auth/verify');
+        const data = await post('/auth/verify', {}, {}, { signal });
 
         setUser(data);
 
@@ -27,7 +27,7 @@ export function useLoginQuery() {
   return {
     ...query,
     data: query.data?.user,
-    error: query.data?.error ?? query.error,
+    error: query.data?.error,
     user: user ?? query.data?.user,
     setUser,
   };

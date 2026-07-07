@@ -5,10 +5,10 @@ import { useSessionDataQuery } from '@/components/hooks';
 import { DATA_TYPES } from '@/lib/constants';
 
 export function SessionData({ websiteId, sessionId }: { websiteId: string; sessionId: string }) {
-  const { data, error } = useSessionDataQuery(websiteId, sessionId);
+  const { data, refreshError } = useSessionDataQuery(websiteId, sessionId);
 
   return (
-    <LoadingPanel data={data} error={error}>
+    <LoadingPanel data={data} refreshError={refreshError}>
       {!data?.length && <Empty />}
       <Column gap="6">
         {data?.map(({ dataKey, dataType, stringValue }) => {

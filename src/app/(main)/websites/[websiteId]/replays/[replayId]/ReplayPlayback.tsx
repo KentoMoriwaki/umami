@@ -27,7 +27,7 @@ export function ReplayPlayback({
   showSessionInfo?: boolean;
   onClose?: () => void;
 }) {
-  const { data: replay, error } = useReplayQuery(websiteId, replayId);
+  const { data: replay, refreshError } = useReplayQuery(websiteId, replayId);
   const { data: replaySaved } = useReplaySavedQuery(websiteId, replayId);
   const { data: session } = useWebsiteSessionQuery(websiteId, replay?.sessionId);
   const { t, labels } = useMessages();
@@ -43,7 +43,12 @@ export function ReplayPlayback({
   };
 
   return (
-    <LoadingPanel data={replay} error={error} loadingIcon="spinner" style={{ minHeight: '400px' }}>
+    <LoadingPanel
+      data={replay}
+      refreshError={refreshError}
+      loadingIcon="spinner"
+      style={{ minHeight: '400px' }}
+    >
       {replay && (
         <Column gap="6">
           {session && (

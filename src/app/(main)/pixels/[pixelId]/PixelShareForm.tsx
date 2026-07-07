@@ -8,12 +8,12 @@ import { SimpleShareCreateForm } from '@/components/share/SimpleShareCreateForm'
 import { SimpleSharesTable } from '@/components/share/SimpleSharesTable';
 
 export function PixelShareForm({ pixelId }: { pixelId: string }) {
-  const { data, error } = usePixelSharesQuery({ pixelId });
+  const { data, refreshError } = usePixelSharesQuery({ pixelId });
   const shares = data?.data || [];
   const hasShares = shares.length > 0;
 
   return (
-    <LoadingPanel data={data} error={error}>
+    <LoadingPanel data={data} refreshError={refreshError}>
       <PixelShareFormContent pixelId={pixelId} hasShares={hasShares} shares={shares} />
     </LoadingPanel>
   );

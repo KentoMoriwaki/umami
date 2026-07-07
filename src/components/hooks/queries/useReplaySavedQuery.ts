@@ -6,8 +6,8 @@ export function useReplaySavedQuery(websiteId: string, replayId: string) {
 
   return useLaneQuery({
     laneKey: ['replay:saved', { websiteId, replayId }],
-    loader: () => {
-      return get(`/websites/${websiteId}/replays/saved/${replayId}`);
+    loader: ({ signal }) => {
+      return get(`/websites/${websiteId}/replays/saved/${replayId}`, {}, {}, { signal });
     },
     enabled: Boolean(websiteId && replayId),
   });

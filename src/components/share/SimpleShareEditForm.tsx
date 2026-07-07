@@ -27,7 +27,6 @@ export function SimpleShareEditForm({
   const config = useConfig();
   const { get, post } = useApi();
   const { touch } = useModified();
-  const { modified } = useModified('shares');
   const [share, setShare] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, setIsPending] = useState(false);
@@ -49,7 +48,7 @@ export function SimpleShareEditForm({
     };
 
     loadShare();
-  }, [get, modified, shareId]);
+  }, [get, shareId]);
 
   const handleSubmit = async (data: { name: string; allowFilter?: boolean; theme?: string }) => {
     setIsPending(true);

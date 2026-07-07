@@ -7,8 +7,8 @@ export function usePixelSharesQuery({ pixelId }: { pixelId: string }, options?: 
 
   return usePagedQuery({
     laneKey: ['pixelShares', { pixelId }],
-    loader: pageParams => {
-      return get(`/pixels/${pixelId}/shares`, pageParams);
+    loader: (pageParams, { signal }) => {
+      return get(`/pixels/${pixelId}/shares`, pageParams, {}, { signal });
     },
     ...options,
   });

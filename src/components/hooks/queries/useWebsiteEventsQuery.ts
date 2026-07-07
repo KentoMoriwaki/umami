@@ -24,17 +24,22 @@ export function useWebsiteEventsQuery(
       'websites:events',
       { websiteId, startAt, endAt, unit, timezone, ...filters, ...params },
     ],
-    loader: pageParams =>
-      get(`/websites/${websiteId}/events`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-        ...pageParams,
-        eventType: EVENT_TYPES[params.view],
-        maxResults: MAX_PAGING_RESULTS,
-      }),
+    loader: (pageParams, { signal }) =>
+      get(
+        `/websites/${websiteId}/events`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+          ...pageParams,
+          eventType: EVENT_TYPES[params.view],
+          maxResults: MAX_PAGING_RESULTS,
+        },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

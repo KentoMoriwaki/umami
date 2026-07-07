@@ -10,7 +10,7 @@ export function getSessionReplays(
 ) {
   return runQuery({
     [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseSql(...args),
+    [CLICKHOUSE]: () => clickhouseQuery(...args),
   });
 }
 
@@ -94,7 +94,7 @@ async function relationalQuery(websiteId: string, filters: QueryFilters, session
   );
 }
 
-async function clickhouseSql(websiteId: string, filters: QueryFilters, sessionId?: string) {
+async function clickhouseQuery(websiteId: string, filters: QueryFilters, sessionId?: string) {
   const { pagedRawQuery, parseFilters } = clickhouse;
   const { search, minDuration } = filters;
   const minDurationMs = minDuration && minDuration > 0 ? minDuration * 1000 : undefined;

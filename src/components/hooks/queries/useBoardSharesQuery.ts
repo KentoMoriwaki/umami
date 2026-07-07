@@ -7,8 +7,8 @@ export function useBoardSharesQuery({ boardId }: { boardId: string }, options?: 
 
   return usePagedQuery({
     laneKey: ['boardShares', { boardId }],
-    loader: pageParams => {
-      return get(`/boards/${boardId}/shares`, pageParams);
+    loader: (pageParams, { signal }) => {
+      return get(`/boards/${boardId}/shares`, pageParams, {}, { signal });
     },
     ...options,
   });

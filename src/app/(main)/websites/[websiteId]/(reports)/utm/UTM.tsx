@@ -14,14 +14,14 @@ export interface UTMProps {
 
 export function UTM({ websiteId, startDate, endDate }: UTMProps) {
   const { t, labels } = useMessages();
-  const { data, error } = useResultQuery<any>('utm', {
+  const { data, refreshError } = useResultQuery<any>('utm', {
     websiteId,
     startDate,
     endDate,
   });
 
   return (
-    <LoadingPanel data={data} error={error} minHeight="300px">
+    <LoadingPanel data={data} refreshError={refreshError} minHeight="300px">
       {data && (
         <Column gap>
           {UTM_PARAMS.map(param => {

@@ -14,17 +14,22 @@ export function useWebsiteSessionsQuery(
 
   return usePagedQuery({
     laneKey: ['sessions', { websiteId, startAt, endAt, unit, timezone, ...params, ...filters }],
-    loader: pageParams => {
-      return get(`/websites/${websiteId}/sessions`, {
-        startAt,
-        endAt,
-        unit,
-        timezone,
-        ...filters,
-        ...pageParams,
-        ...params,
-        maxResults: MAX_PAGING_RESULTS,
-      });
+    loader: (pageParams, { signal }) => {
+      return get(
+        `/websites/${websiteId}/sessions`,
+        {
+          startAt,
+          endAt,
+          unit,
+          timezone,
+          ...filters,
+          ...pageParams,
+          ...params,
+          maxResults: MAX_PAGING_RESULTS,
+        },
+        {},
+        { signal },
+      );
     },
   });
 }

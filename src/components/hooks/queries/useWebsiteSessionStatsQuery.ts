@@ -10,8 +10,13 @@ export function useWebsiteSessionStatsQuery(websiteId: string, options?: Record<
 
   return useLaneQuery({
     laneKey: ['sessions:stats', { websiteId, startAt, endAt, unit, timezone, ...filters }],
-    loader: () =>
-      get(`/websites/${websiteId}/sessions/stats`, { startAt, endAt, unit, timezone, ...filters }),
+    loader: ({ signal }) =>
+      get(
+        `/websites/${websiteId}/sessions/stats`,
+        { startAt, endAt, unit, timezone, ...filters },
+        {},
+        { signal },
+      ),
     enabled: !!websiteId,
     ...options,
   });

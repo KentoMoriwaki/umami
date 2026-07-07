@@ -3,7 +3,7 @@ import { Grid } from '@umami/react-zen';
 import { firstBy } from 'thenby';
 import { DataSuspense } from '@/components/common/DataSuspense';
 import { GridRow } from '@/components/common/GridRow';
-import { PageBody } from '@/components/common/PageBody';
+import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { Panel } from '@/components/common/Panel';
 import { useMobile, useRealtimeQuery } from '@/components/hooks';
 import { RealtimeChart } from '@/components/metrics/RealtimeChart';
@@ -24,12 +24,8 @@ export function RealtimePage({ websiteId }: { websiteId: string }) {
 }
 
 function RealtimePageContent({ websiteId }: { websiteId: string }) {
-  const { data, error } = useRealtimeQuery(websiteId);
+  const { data, refreshError } = useRealtimeQuery(websiteId);
   const { isMobile } = useMobile();
-
-  if (error) {
-    return <PageBody error={error} />;
-  }
 
   const countries = percentFilter(
     Object.keys(data.countries)
@@ -38,30 +34,32 @@ function RealtimePageContent({ websiteId }: { websiteId: string }) {
   );
 
   return (
-    <Grid gap="3">
-      <RealtimeHeader data={data} />
-      <Panel>
-        <RealtimeChart data={data} unit="minute" />
-      </Panel>
-      <Panel>
-        <RealtimeLog data={data} />
-      </Panel>
-      <GridRow layout="two">
+    <LoadingPanel data={data} refreshError={refreshError}>
+      <Grid gap="3">
+        <RealtimeHeader data={data} />
         <Panel>
-          <RealtimePaths data={data} />
+          <RealtimeChart data={data} unit="minute" />
         </Panel>
         <Panel>
-          <RealtimeReferrers data={data} />
+          <RealtimeLog data={data} />
         </Panel>
-      </GridRow>
-      <GridRow layout="one-two">
-        <Panel>
-          <RealtimeCountries data={countries} />
-        </Panel>
-        <Panel gridColumn={isMobile ? null : 'span 2'} padding="0">
-          <WorldMap data={countries} />
-        </Panel>
-      </GridRow>
-    </Grid>
+        <GridRow layout="two">
+          <Panel>
+            <RealtimePaths data={data} />
+          </Panel>
+          <Panel>
+            <RealtimeReferrers data={data} />
+          </Panel>
+        </GridRow>
+        <GridRow layout="one-two">
+          <Panel>
+            <RealtimeCountries data={countries} />
+          </Panel>
+          <Panel gridColumn={isMobile ? null : 'span 2'} padding="0">
+            <WorldMap data={countries} />
+          </Panel>
+        </GridRow>
+      </Grid>
+    </LoadingPanel>
   );
 }

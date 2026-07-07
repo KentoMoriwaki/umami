@@ -7,10 +7,10 @@ import { formatLongNumber } from '@/lib/format';
 
 export function SessionsMetricsBar({ websiteId }: { websiteId: string }) {
   const { t, labels } = useMessages();
-  const { data, isFetching, error } = useWebsiteSessionStatsQuery(websiteId);
+  const { data, isFetching, refreshError } = useWebsiteSessionStatsQuery(websiteId);
 
   return (
-    <LoadingPanel data={data} isFetching={isFetching} error={error}>
+    <LoadingPanel data={data} isFetching={isFetching} refreshError={refreshError}>
       {data && (
         <MetricsBar>
           <MetricCard
