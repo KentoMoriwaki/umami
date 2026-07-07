@@ -1,4 +1,4 @@
-import { use, useEffect } from 'react';
+import { use, useEffect, useEffectEvent } from 'react';
 import {
   type LaneLoader,
   type LaneRead,
@@ -37,6 +37,9 @@ export function useLaneQuery<TData = any, TSelected = TData>({
   loader: LaneLoader<TData>;
 }): LaneQueryResult<TData, TSelected> {
   const lane = useLaneInstance();
+  const invalidateForPoll = useEffectEvent(() => {
+    lane.invalidate(laneKey, { background: true, onlyIf: 'settled' });
+  });
   const result = useLane<TData>(laneKey, enabled ? loader : undefined, options);
   const read = result.promise ? use(result.promise) : undefined;
   const data = read
@@ -52,11 +55,11 @@ export function useLaneQuery<TData = any, TSelected = TData>({
     }
 
     const timer = setInterval(() => {
-      lane.invalidate(laneKey, { background: true, onlyIf: 'settled' });
+      invalidateForPoll();
     }, refetchInterval);
 
     return () => clearInterval(timer);
-  }, [enabled, lane, laneKey, refetchInterval]);
+  }, [enabled, refetchInterval]);
 
   return {
     data,

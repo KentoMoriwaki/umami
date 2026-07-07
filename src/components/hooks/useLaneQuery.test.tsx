@@ -8,15 +8,18 @@ function QueryReader({
   laneKey,
   loader,
   enabled = true,
+  refetchInterval,
 }: {
   laneKey: readonly unknown[];
   loader: () => Promise<string>;
   enabled?: boolean;
+  refetchInterval?: number;
 }) {
   const { data } = useLaneQuery({
     laneKey,
     loader,
     enabled,
+    refetchInterval,
   });
 
   return <div>{enabled ? data : 'disabled'}</div>;
@@ -64,5 +67,44 @@ describe('useLaneQuery', () => {
 
     expect(screen.getByText('disabled')).toBeInTheDocument();
     expect(loader).not.toHaveBeenCalled();
+  });
+
+  it('does not re-arm polling when an equivalent inline lane key is re-rendered', async () => {
+    const setIntervalSpy = vi.spyOn(globalThis, 'setInterval');
+    const pollingIntervalCalls = () =>
+      setIntervalSpy.mock.calls.filter(([, delay]) => delay === 5000);
+    const loader = vi.fn(async () => 'loaded');
+
+    const view = (id: string) => (
+      <Suspense fallback={<div>suspense fallback</div>}>
+        <QueryReader laneKey={['polling-read', { id }]} loader={loader} refetchInterval={5000} />
+      </Suspense>
+    );
+
+    try {
+      let rendered!: ReturnType<typeof render>;
+
+      await act(async () => {
+        rendered = render(view('same-key'));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('loaded')).toBeInTheDocument();
+      });
+      expect(pollingIntervalCalls()).toHaveLength(1);
+
+      await act(async () => {
+        rendered.rerender(view('same-key'));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('loaded')).toBeInTheDocument();
+      });
+      expect(pollingIntervalCalls()).toHaveLength(1);
+
+      rendered.unmount();
+    } finally {
+      setIntervalSpy.mockRestore();
+    }
   });
 });
